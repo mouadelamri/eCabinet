@@ -15,8 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role' , ['ADMIN' ,'DOCTOR' ,'PATIENT ' ,' SECRETARY']);
+            //champs specifique pour medicen
+            $table->string('specialiste')->nullable();
+            $table->string('telephone_pro')->nullable();
+            //champs specifique pour patient
+            $table->date('date_naissance')->nullable();
+            $table->string('adresse')->nullable();
+            $table->string('telephone')->nullable();
+            $table->string('numero_secretaire_sociale')->nullable();
+            $table->string('groupe_sanguin')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
