@@ -12,7 +12,7 @@ class Admin extends User
             $builder->where('role', 'ADMIN');
         });
     }
-    //methodes
+    //methode
     public function createDoctor()
     {
 
