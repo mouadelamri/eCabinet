@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('contenu_medicaments');
             $table->string('chemin_pdf');
-            $table->foreignId('consultations_id')->constrained()->unique();
+            $table->foreignId('consultation_id')->constrained()->unique();
             $table->timestamps();
         });
     }

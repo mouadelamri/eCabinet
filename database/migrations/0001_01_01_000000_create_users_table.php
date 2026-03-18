@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('date_naissance')->nullable();
             $table->string('adresse')->nullable();
             $table->string('telephone')->nullable();
-            $table->string('numero_secretaire_sociale')->nullable();
+            $table->string('numero_securite_sociale')->nullable();
             $table->string('groupe_sanguin')->nullable();
             $table->rememberToken();
             $table->timestamps();

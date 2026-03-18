@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Medecin extends Model
+class Medecin extends User
 {
     protected static function booted()
     {
@@ -15,7 +15,7 @@ class Medecin extends Model
     //relations
     public function RendezVous()
     {
-        return $this->hasMany('rendez_vouses' , 'medecin_id');
+        return $this->hasMany(RendezVous::class, 'medecin_id');
     }
     //methods
     public function viewSchedule()

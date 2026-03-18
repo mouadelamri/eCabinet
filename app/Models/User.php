@@ -31,7 +31,7 @@ class User extends Authenticatable
         'date_naissance',
         'adresse',
         'telephone',
-        'numero_secretaire_sociale',
+        'numero_securite_sociale',
         'groupe_sanguin'
     ];
 

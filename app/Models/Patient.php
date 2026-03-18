@@ -15,7 +15,7 @@ class Patient extends User
     //relations
     public function RendezVous()
     {
-        return $this->hasMany('rendez_vouses' , 'patient_id');
+        return $this->hasMany(RendezVous::class , 'patient_id');
     }
 
     //methods

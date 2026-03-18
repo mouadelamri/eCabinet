@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('rendez_vouses', function (Blueprint $table) {
             $table->id();
             $table->dateTime('date_heure');
-            $table->enum('statut' , ['PENDING' , 'CONFIRMED' , 'CONCELLED' , 'COMPLETED']);
+            $table->enum('statut' , ['PENDING' , 'CONFIRMED' , 'CANCELLED' , 'COMPLETED']);
             $table->string('motif');
-            $table->foreignId('medicin_id')->constrained('users');
+            $table->foreignId('medecin_id')->constrained('users');
             $table->foreignId('patient_id')->constrained('users');
             $table->timestamps();
         });
