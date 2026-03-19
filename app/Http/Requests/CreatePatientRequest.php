@@ -30,7 +30,8 @@ class CreatePatientRequest extends FormRequest
             'date_naissance' => 'required|date',
             'adresse' => 'required|string',
             'telephone' => 'required|string|max:20',
-            'numero_secretaire_sociale' => 'required|string',
+            'numero_securite_sociale' => 'nullable|string|required_without:numero_secretaire_sociale',
+            'numero_secretaire_sociale' => 'nullable|string|required_without:numero_securite_sociale',
             'groupe_sanguin' => 'required|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-'
         ];
     }
