@@ -7,15 +7,17 @@ use App\Http\Requests\CreatePatientRequest;
 use App\Http\Requests\CreateSecretaryRequest;
 use App\Models\RendezVous;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     public function createDoctor(CreateDoctorRequest $request)
     {
-        $doctor = User::create([
-            ...$request->validated(),
-            'role' => 'DOCTOR',
-        ]);
+        $doctorData = $request->validated();
+        $doctorData['password'] = Hash::make($doctorData['password']);
+        $doctorData['role'] = 'DOCTOR';
+
+        $doctor = User::create($doctorData);
 
         return response()->json([
             'message' => 'adding doctor with succesful',
@@ -25,10 +27,11 @@ class AdminController extends Controller
 
     public function createSecretary(CreateSecretaryRequest $request)
     {
-        $secretary = User::create([
-            ...$request->validated(),
-            'role' => 'SECRETARY',
-        ]);
+        $secretaryData = $request->validated();
+        $secretaryData['password'] = Hash::make($secretaryData['password']);
+        $secretaryData['role'] = 'SECRETARY';
+
+        $secretary = User::create($secretaryData);
 
         return response()->json([
             'message' => 'adding secretary with succesful',
@@ -39,16 +42,15 @@ class AdminController extends Controller
     public function createPatient(CreatePatientRequest $request)
     {
         $patientData = $request->validated();
+        $patientData['password'] = Hash::make($patientData['password']);
 
         if (array_key_exists('numero_secretaire_sociale', $patientData)) {
             $patientData['numero_securite_sociale'] = $patientData['numero_secretaire_sociale'];
             unset($patientData['numero_secretaire_sociale']);
         }
 
-        $patient = User::create([
-            ...$patientData,
-            'role' => 'PATIENT',
-        ]);
+        $patientData['role'] = 'PATIENT';
+        $patient = User::create($patientData);
 
         return response()->json([
             'message' => 'adding Patient with succesful',
@@ -66,3 +68,4 @@ class AdminController extends Controller
         ], 200);
     }
 }
+
