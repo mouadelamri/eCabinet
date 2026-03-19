@@ -38,12 +38,9 @@ class AdminController extends Controller
 
     public function createPatient(CreatePatientRequest $request)
     {
-//<<<<<<< HEAD
         $PatientData = $request->validated() ;
         $PatientData['role'] = 'PATIENT' ;
         $patient = User::create($PatientData);
-//=======
-//>>>>>>> aa3fafb4 (Add the UI interfaces for login/sign up/forget)
         return response()->json([
             'message'=> 'adding Patient with succesful',
             'user'=> $patient
@@ -52,15 +49,11 @@ class AdminController extends Controller
 
     public function viewGlobalStats()
     {
-//<<<<<<< HEAD
-    //
-//=======
         return response()->json([
             'doctors_count' => User::where('role', 'DOCTOR')->count(),
             'secretaries_count' => User::where('role', 'SECRETARY')->count(),
             'patients_count' => User::where('role', 'PATIENT')->count(),
             'appointments_count' => \App\Models\RendezVous::count(),
         ], 200);
-//>>>>>>> aa3fafb4 (Add the UI interfaces for login/sign up/forget)
     }
 }
