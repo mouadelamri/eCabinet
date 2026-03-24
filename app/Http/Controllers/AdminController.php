@@ -20,9 +20,9 @@ class AdminController extends Controller
         $doctor = User::create($doctorData);
 
         return response()->json([
-            'message' => 'adding doctor with succesful',
-            'user' => $doctor,
-        ], 200);
+            'message' => 'Doctor created successfully',
+            'user'    => $doctor,
+        ], 201);
     }
 
     public function createSecretary(CreateSecretaryRequest $request)
@@ -34,38 +34,32 @@ class AdminController extends Controller
         $secretary = User::create($secretaryData);
 
         return response()->json([
-            'message' => 'adding secretary with succesful',
-            'user' => $secretary,
-        ], 200);
+            'message' => 'Secretary created successfully',
+            'user'    => $secretary,
+        ], 201);
     }
 
     public function createPatient(CreatePatientRequest $request)
     {
         $patientData = $request->validated();
         $patientData['password'] = Hash::make($patientData['password']);
-
-        if (array_key_exists('numero_secretaire_sociale', $patientData)) {
-            $patientData['numero_securite_sociale'] = $patientData['numero_secretaire_sociale'];
-            unset($patientData['numero_secretaire_sociale']);
-        }
-
         $patientData['role'] = 'PATIENT';
+
         $patient = User::create($patientData);
 
         return response()->json([
-            'message' => 'adding Patient with succesful',
-            'user' => $patient,
-        ], 200);
+            'message' => 'Patient created successfully',
+            'user'    => $patient,
+        ], 201);
     }
 
     public function viewGlobalStats()
     {
         return response()->json([
-            'doctors_count' => User::where('role', 'DOCTOR')->count(),
-            'secretaries_count' => User::where('role', 'SECRETARY')->count(),
-            'patients_count' => User::where('role', 'PATIENT')->count(),
+            'doctors_count'      => User::where('role', 'DOCTOR')->count(),
+            'secretaries_count'  => User::where('role', 'SECRETARY')->count(),
+            'patients_count'     => User::where('role', 'PATIENT')->count(),
             'appointments_count' => RendezVous::count(),
         ], 200);
     }
 }
-

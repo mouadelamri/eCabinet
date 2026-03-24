@@ -8,7 +8,7 @@ class Notification extends Model
 {
     protected $table = 'notifications';
     protected $fillable = [
-        'type' , 'message', 'est_lu' ,
+        'type' , 'message', 'est_lu' , 'sent_at',
         'user_id'
     ];
     protected $casts = [

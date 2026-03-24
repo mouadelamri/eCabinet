@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('telephone')->nullable();
             $table->string('numero_securite_sociale')->nullable();
             $table->string('groupe_sanguin')->nullable();
+            //champs specifique pour la situation medicale du patient
+            $table->text('antecedents_medicaux')->nullable();
+            $table->text('allergies')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

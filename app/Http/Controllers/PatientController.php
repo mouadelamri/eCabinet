@@ -17,35 +17,30 @@ class PatientController extends Controller
     {
         $patientData = $request->validated();
         $patientData['password'] = Hash::make($patientData['password']);
-
-        if (array_key_exists('numero_secretaire_sociale', $patientData)) {
-            $patientData['numero_securite_sociale'] = $patientData['numero_secretaire_sociale'];
-            unset($patientData['numero_secretaire_sociale']);
-        }
-
         $patientData['role'] = 'PATIENT';
+
         $patient = User::create($patientData);
 
         return response()->json([
-            'message' => 'adding Patient with succesful',
-            'user' => $patient,
-        ], 200);
+            'message' => 'Patient registered successfully',
+            'user'    => $patient,
+        ], 201);
     }
 
     public function requestAppointment(RendezVousRequest $request)
     {
         $RendezVousData = $request->validated();
         $RendezVousData['statut'] = 'PENDING';
-        $rendezVous = RendezVous::create( $RendezVousData);
+        $rendezVous = RendezVous::create($RendezVousData);
 
         return response()->json([
             'message' => 'Rendez-vous created successfully',
-            'data' => $rendezVous
+            'data'    => $rendezVous
         ], 201);
     }
+
     public function viewMyProgress()
     {
 
     }
 }
-

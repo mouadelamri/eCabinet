@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ordonnances', function (Blueprint $table) {
             $table->id();
             $table->text('contenu_medicaments');
-            $table->string('chemin_pdf');
+            $table->string('chemin_pdf')->nullable();
             $table->foreignId('consultation_id')->constrained()->unique();
             $table->timestamps();
         });

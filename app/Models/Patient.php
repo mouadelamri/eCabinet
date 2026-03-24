@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\RendezVous;
 
 class Patient extends User
 {

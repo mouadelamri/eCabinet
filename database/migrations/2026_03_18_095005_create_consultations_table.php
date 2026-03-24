@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('consultations', function (Blueprint $table) {
             $table->id();
-            $table->text('compte_rendu');
-            $table->text('notes_privees');
+            $table->text('compte_rendu')->nullable();
+            $table->text('notes_privees')->nullable();
             $table->string('tension');
             $table->float('poids');
             $table->float('temperature');
             $table->integer('rythme_cardiaque');
-            $table->foreignId('rendez_vous_id')->constrained('rendez_vouses')->unique();
+            $table->foreignId('rendez_vous_id')->constrained('rendez_vous')->unique();
             $table->timestamps();
         });
     }

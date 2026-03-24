@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CreatePatientRequest extends FormRequest
 {
@@ -24,15 +23,16 @@ class CreatePatientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'date_naissance' => 'required|date',
-            'adresse' => 'required|string',
-            'telephone' => 'required|string|max:20',
-            'numero_securite_sociale' => 'nullable|string|required_without:numero_secretaire_sociale',
-            'numero_secretaire_sociale' => 'nullable|string|required_without:numero_securite_sociale',
-            'groupe_sanguin' => 'required|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-'
+            'name'                    => 'required|string|max:255',
+            'email'                   => 'required|string|email|max:255|unique:users,email',
+            'password'                => 'required|string|min:8|confirmed',
+            'date_naissance'          => 'required|date',
+            'adresse'                 => 'required|string',
+            'telephone'               => 'required|string|max:20',
+            'numero_securite_sociale' => 'nullable|string',
+            'groupe_sanguin'          => 'required|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'antecedents_medicaux'    => 'nullable|string',
+            'allergies'               => 'nullable|string',
         ];
     }
 }

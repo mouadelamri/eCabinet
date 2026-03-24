@@ -32,7 +32,9 @@ class User extends Authenticatable
         'adresse',
         'telephone',
         'numero_securite_sociale',
-        'groupe_sanguin'
+        'groupe_sanguin',
+        'antecedents_medicaux',
+        'allergies'
     ];
 
     /**
@@ -59,7 +61,7 @@ class User extends Authenticatable
     }
 
     //relations
-    public function notification()
+    public function notifications()
     {
         return $this->hasMany(Notification::class);
     }
