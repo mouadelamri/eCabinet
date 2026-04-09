@@ -63,8 +63,8 @@
 <div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-[0_10px_30px_-5px_rgba(0,106,97,0.08)]">
 <div class="flex items-center justify-between mb-8">
 <div>
-<h3 class="text-lg font-bold font-headline text-on-surface">Appointment Evolution</h3>
-<p class="text-sm text-on-surface-variant">Weekly performance tracking</p>
+<h3 class="text-lg font-bold font-headline text-on-surface">System Activity</h3>
+<p class="text-sm text-on-surface-variant">Weekly appointments & registrations</p>
 </div>
 </div>
 <div class="relative h-64 w-full">
@@ -153,9 +153,11 @@
         const chartData = @json($last7Days);
         
         const labels = chartData.map(item => item.label);
-        const data = chartData.map(item => item.count);
+        const appointmentsData = chartData.map(item => item.count);
+        const registrationsData = chartData.map(item => item.registrations);
+        const loginsData = chartData.map(item => item.logins);
 
-        // Styling gradients
+        // Styling gradients for Appointments
         let gradientStroke = ctx.createLinearGradient(0, 0, 700, 0);
         gradientStroke.addColorStop(0, '#006a61');
         gradientStroke.addColorStop(1, '#39b8fd');
@@ -164,29 +166,83 @@
         gradientFill.addColorStop(0, 'rgba(0, 106, 97, 0.4)');
         gradientFill.addColorStop(1, 'rgba(0, 106, 97, 0.05)');
 
+        // Styling gradients for Registrations
+        let regGradientStroke = ctx.createLinearGradient(0, 0, 700, 0);
+        regGradientStroke.addColorStop(0, '#fd7e14');
+        regGradientStroke.addColorStop(1, '#ffc107');
+
+        let regGradientFill = ctx.createLinearGradient(0, 0, 0, 300);
+        regGradientFill.addColorStop(0, 'rgba(253, 126, 20, 0.4)');
+        regGradientFill.addColorStop(1, 'rgba(253, 126, 20, 0.05)');
+
+        // Styling gradients for Logins
+        let loginGradientStroke = ctx.createLinearGradient(0, 0, 700, 0);
+        loginGradientStroke.addColorStop(0, '#6200ee');
+        loginGradientStroke.addColorStop(1, '#9c4dff');
+
+        let loginGradientFill = ctx.createLinearGradient(0, 0, 0, 300);
+        loginGradientFill.addColorStop(0, 'rgba(98, 0, 238, 0.4)');
+        loginGradientFill.addColorStop(1, 'rgba(98, 0, 238, 0.05)');
+
         new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Appointments',
-                    data: data,
-                    borderColor: gradientStroke,
-                    backgroundColor: gradientFill,
-                    borderWidth: 3,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#006a61',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.4
-                }]
+                datasets: [
+                    {
+                        label: 'Appointments',
+                        data: appointmentsData,
+                        borderColor: gradientStroke,
+                        backgroundColor: gradientFill,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#006a61',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'New Registrations',
+                        data: registrationsData,
+                        borderColor: regGradientStroke,
+                        backgroundColor: regGradientFill,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#fd7e14',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'User Logins',
+                        data: loginsData,
+                        borderColor: loginGradientStroke,
+                        backgroundColor: loginGradientFill,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#6200ee',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { 
+                    legend: { 
+                        display: true,
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    } 
+                },
                 scales: {
                     y: {
                         beginAtZero: true,

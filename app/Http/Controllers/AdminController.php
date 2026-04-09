@@ -8,6 +8,7 @@ use App\Http\Requests\CreateSecretaryRequest;
 use App\Models\Consultation;
 use App\Models\RendezVous;
 use App\Models\User;
+use App\Models\UserActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -28,12 +29,14 @@ class AdminController extends Controller
             ->whereYear('created_at', now()->year)
             ->count();
 
-        // Last 7 days appointments for Chart.js
+        // Last 7 days activity for Chart.js
         $last7Days = collect(range(6, 0))->map(function ($daysBack) {
             $date = now()->subDays($daysBack);
             return [
                 'label' => $date->format('D'),
-                'count' => RendezVous::whereDate('date_heure', $date->toDateString())->count(),
+                'count' => RendezVous::whereDate('created_at', $date->toDateString())->count(),
+                'registrations' => User::whereDate('created_at', $date->toDateString())->count(),
+                'logins' => UserActivity::where('type', 'login')->whereDate('created_at', $date->toDateString())->count(),
             ];
         });
 
