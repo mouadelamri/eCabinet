@@ -19,8 +19,7 @@
     
     <!-- Hidden fields for actual submission -->
     <input type="hidden" name="medecin_id" id="medecin_id" required>
-    <input type="hidden" name="date" id="date" required>
-    <input type="hidden" name="time" id="time" required>
+    <input type="hidden" name="date_heure" id="date_heure" required>
     <input type="hidden" name="type" value="CONSULTATION">
 
     <!-- Step 1: Doctor Selection (Bento Grid Style) -->
@@ -141,14 +140,13 @@
 
     function selectDate(date) {
         selectedDate = date;
-        document.getElementById('date').value = date;
+        updateDateHeure();
         updateSummary();
         checkValidation();
     }
 
     function selectTime(time) {
         selectedTime = time;
-        document.getElementById('time').value = time;
         
         // Update UI
         document.querySelectorAll('.time-slot').forEach(btn => {
@@ -160,8 +158,17 @@
         selectedBtn.classList.remove('bg-surface-container-high');
         selectedBtn.classList.add('bg-primary', 'text-white', 'ring-2', 'ring-primary-fixed');
 
+        updateDateHeure();
         updateSummary();
         checkValidation();
+    }
+
+    function updateDateHeure() {
+        if (selectedDate && selectedTime) {
+            document.getElementById('date_heure').value = selectedDate + ' ' + selectedTime;
+        } else {
+            document.getElementById('date_heure').value = '';
+        }
     }
 
     function updateSummary() {

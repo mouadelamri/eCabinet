@@ -42,14 +42,30 @@
                         <span class="text-[10px] text-teal-600 bg-teal-50 px-2 py-0.5 rounded font-bold">-2% vs fév.</span>
                     </div>
                     <div class="h-32 w-full flex items-end gap-2 px-1">
-                        <div class="bg-surface-container-high flex-1 rounded-t-sm h-[60%] relative group">
-                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">13/8</div>
-                        </div>
-                        <div class="bg-surface-container-high flex-1 rounded-t-sm h-[65%]"></div>
-                        <div class="bg-surface-container-high flex-1 rounded-t-sm h-[55%]"></div>
-                        <div class="bg-surface-container-high flex-1 rounded-t-sm h-[70%]"></div>
-                        <div class="bg-primary flex-1 rounded-t-sm h-[50%] shadow-[0_-4px_10px_rgba(0,104,95,0.2)]"></div>
-                        <div class="bg-primary/80 flex-1 rounded-t-sm h-[45%]"></div>
+                        @php
+                            $tensionData = $consultations->whereNotNull('tension')->take(6)->reverse();
+                            $hasTension = $tensionData->isNotEmpty();
+                        @endphp
+                        
+                        @if($hasTension)
+                            @foreach($tensionData as $item)
+                                @php
+                                    $values = explode('/', $item->tension);
+                                    $systolic = (int)($values[0] ?? 120);
+                                    $height = min(90, max(20, ($systolic / 200) * 100)); // Scaled height
+                                @endphp
+                                <div class="bg-primary flex-1 rounded-t-sm relative group transition-all hover:bg-primary-container" style="height: {{ $height }}%">
+                                    <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity z-20">{{ $item->tension }}</div>
+                                </div>
+                            @endforeach
+                            @for($i = count($tensionData); $i < 6; $i++)
+                                <div class="bg-surface-container-high flex-1 rounded-t-sm h-[20%] opacity-30"></div>
+                            @endfor
+                        @else
+                            @for($i = 0; $i < 6; $i++)
+                                <div class="bg-surface-container-high flex-1 rounded-t-sm h-[30%] opacity-20"></div>
+                            @endfor
+                        @endif
                     </div>
                 </div>
 
@@ -65,15 +81,40 @@
                         </div>
                         <span class="text-[10px] text-secondary bg-secondary-fixed/30 px-2 py-0.5 rounded font-bold">Stable</span>
                     </div>
-                    <div class="h-32 w-full relative flex items-center">
-                        <svg class="w-full h-full overflow-visible" viewBox="0 0 400 100">
-                            <path d="M0,80 Q50,75 100,60 T200,65 T300,50 T400,45" fill="none" stroke="#006591" stroke-linecap="round" stroke-width="3"></path>
-                            <circle cx="0" cy="80" fill="#006591" r="4"></circle>
-                            <circle cx="100" cy="60" fill="#006591" r="4"></circle>
-                            <circle cx="200" cy="65" fill="#006591" r="4"></circle>
-                            <circle cx="300" cy="50" fill="#006591" r="4"></circle>
-                            <circle cx="400" cy="45" fill="#006591" r="6" stroke="white" stroke-width="2"></circle>
-                        </svg>
+                    <div class="h-32 w-full relative flex items-center bg-surface-container-high/10 rounded-lg p-2">
+                        @php
+                            $poidsData = $consultations->whereNotNull('poids')->take(5)->reverse();
+                            $hasPoids = $poidsData->count() >= 2;
+                        @endphp
+                        
+                        @if($hasPoids)
+                            <svg class="w-full h-full overflow-visible" viewBox="0 0 400 100">
+                                @php
+                                    $points = [];
+                                    $maxWeight = $poidsData->max(fn($i) => (float)$i->poids) ?: 100;
+                                    $minWeight = $poidsData->min(fn($i) => (float)$i->poids) ?: 0;
+                                    $range = max(10, $maxWeight - $minWeight);
+                                    $i = 0;
+                                    foreach($poidsData as $item) {
+                                        $w = (float)$item->poids;
+                                        $x = ($i / 4) * 400;
+                                        $y = 90 - (($w - $minWeight) / $range) * 80;
+                                        $points[] = "$x,$y";
+                                        $i++;
+                                    }
+                                @endphp
+                                <path d="M {{ implode(' L ', $points) }}" fill="none" stroke="#006591" stroke-linecap="round" stroke-width="3"></path>
+                                @foreach($points as $p)
+                                    @php list($x, $y) = explode(',', $p); @endphp
+                                    <circle cx="{{ $x }}" cy="{{ $y }}" fill="#006591" r="4" stroke="white" stroke-width="1"></circle>
+                                @endforeach
+                            </svg>
+                        @else
+                            <div class="flex flex-col items-center justify-center w-full h-full opacity-40">
+                                <span class="material-symbols-outlined text-outline">query_stats</span>
+                                <p class="text-[10px] uppercase font-bold text-outline">Données insuffisantes</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
