@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\checkAdmin;
+use App\Http\Middleware\CheckSecretaire;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'checkAdmin' => checkAdmin::class
+            'checkAdmin' => checkAdmin::class ,
+            'CheckSecretaire' => CheckSecretaire::class
+
         ]);
 
         $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {

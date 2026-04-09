@@ -21,7 +21,7 @@ Route::get('stats' , [AdminController::class , 'viewGlobalStats'])->middleware('
 
 Route::post('register' , [PatientController::class , 'register']);
 
-Route::post('/rendezvous', [PatientController::class, 'requestAppointment']);
-Route::patch('/rendezvous/{id}/confirm', [RendezVousController::class, 'confirmer']);
-Route::patch('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler']);
+Route::post('/rendezvous', [PatientController::class, 'requestAppointment'])->middleware('auth:sanctum');
+Route::patch('/rendezvous/{id}/confirm', [RendezVousController::class, 'confirmer'])->middleware('auth:sanctum' , 'CheckSecretaire');
+Route::patch('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler'])->middleware('auth:sanctum' , 'CheckSecretaire');
 

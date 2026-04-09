@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class checkAdmin
+class CheckSecretaire
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,10 @@ class checkAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role !== 'ADMIN')
-        return response()->json(['message' => 'You are not admin'], 403);
-
+        if(Auth::user()->role !== 'SECRETARY')
+        return response()->json([
+        'non authantficated'
+        ]);
         return $next($request);
-
     }
 }
