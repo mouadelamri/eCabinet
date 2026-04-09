@@ -21,7 +21,7 @@ class Doctor extends User
     //methods
     public function viewSchedule()
     {
-
+     
     }
     public function viewPatientProgress($patient_id)
     {

@@ -9,7 +9,8 @@ class Secretaire extends User
     protected static function booted()
     {
         static::addGlobalScope('SECRETARY', function ($builder) {
-            $builder->where('role', 'SECRETARY');
+            $builder->where('role', '
+            SECRETARY');
         });
     }
     //methods
