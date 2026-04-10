@@ -13,13 +13,5 @@ class Secretaire extends User
             SECRETARY');
         });
     }
-    //methods
-    public function manageAppointments()
-    {
 
-    }
-    public function managePatients()
-    {
-
-    }
 }

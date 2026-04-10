@@ -107,19 +107,6 @@ class AdminController extends Controller
         return back()->with('success', 'Secretary created successfully.');
     }
 
-    public function createPatient(CreatePatientRequest $request)
-    {
-        $data             = $request->validated();
-        $data['password'] = Hash::make($data['password']);
-        $data['role']     = 'PATIENT';
-        $patient          = User::create($data);
-
-        if ($request->expectsJson()) {
-            return response()->json(['message' => 'Patient created successfully', 'user' => $patient], 201);
-        }
-        return back()->with('success', 'Patient created successfully.');
-    }
-
     public function viewGlobalStats()
     {
         return response()->json([

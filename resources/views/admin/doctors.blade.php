@@ -50,7 +50,7 @@
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pl-1">Spécialité</label>
-                    <input name="specialite" type="text" required class="w-full px-4 py-3 bg-surface-container-high border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="Généraliste, Cardiologue..." />
+                    <input name="specialiste" type="text" required class="w-full px-4 py-3 bg-surface-container-high border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="Généraliste, Cardiologue..." />
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pl-1">Téléphone</label>
@@ -127,7 +127,7 @@
                             </div>
                         </td>
                         <td class="px-8 py-5">
-                            <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-extrabold rounded-full uppercase tracking-widest">{{ $doctor->specialite ?? 'Généraliste' }}</span>
+                            <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-extrabold rounded-full uppercase tracking-widest">{{ $doctor->specialiste ?? 'Généraliste' }}</span>
                         </td>
                         <td class="px-8 py-5">
                             <p class="text-sm font-bold text-on-surface">{{ $doctor->telephone_pro ?? '-' }}</p>

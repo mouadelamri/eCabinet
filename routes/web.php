@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
@@ -29,7 +28,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::post('/doctors', [AdminController::class, 'createDoctor'])->name('doctors.store');
     Route::post('/secretaries', [AdminController::class, 'createSecretary'])->name('secretaries.store');
-    Route::post('/patients', [AdminController::class, 'createPatient'])->name('patients.store');
+    Route::post('/patients', [PatientController::class, 'register'])->name('patients.store');
     Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.destroy');
 });
 

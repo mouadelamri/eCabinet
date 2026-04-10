@@ -166,11 +166,15 @@ class PatientController extends Controller
         $patientData['role'] = 'PATIENT';
 
         $patient = User::create($patientData);
+        $user_role = Auth::user()->role ;
+        if($user_role == "ADMIN"){
+        $controller = new AdminController();
+        return $controller->patients();
+        }else if($user_role == "SECRETARY"){
 
-        return response()->json([
-            'message' => 'Patient registered successfully',
-            'user'    => $patient,
-        ], 201);
+        }else{
+            //return view('welcome');
+        }
     }
 
     public function viewMyProgress()
