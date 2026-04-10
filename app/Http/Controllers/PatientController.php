@@ -121,16 +121,30 @@ class PatientController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'telephone' => ['nullable', 'string', 'max:20'],
+            'name'          => ['required', 'string', 'max:255'],
+            'email'         => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'telephone'     => ['nullable', 'string', 'max:20'],
+            'profile_photo' => ['nullable', 'image', 'max:2048'], // Max 2MB
         ]);
 
-        $user->update([
+        $userData = [
             'name'      => $request->name,
             'email'     => $request->email,
             'telephone' => $request->telephone,
-        ]);
+        ];
+
+        // Handle Profile Photo Upload
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_photo_path);
+            }
+
+            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            $userData['profile_photo_path'] = $path;
+        }
+
+        $user->update($userData);
 
         if ($request->filled('password')) {
             $request->validate([

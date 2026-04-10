@@ -9,7 +9,7 @@
     <p class="text-on-surface-variant max-w-2xl leading-relaxed">Mettez à jour vos informations personnelles et médicales pour assurer un suivi précis par vos professionnels de santé.</p>
 </div>
 
-<form method="POST" action="{{ route('patient.settings.update') }}">
+<form method="POST" action="{{ route('patient.settings.update') }}" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
 
@@ -23,13 +23,26 @@
             <div class="bg-surface-container-low rounded-xl p-8">
                 <div class="flex items-center gap-6 mb-8">
                     <div class="relative group">
-                        <div class="w-24 h-24 rounded-2xl shadow-lg bg-primary-fixed flex items-center justify-center text-primary text-4xl font-bold">
-                            {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                        </div>
+                        <label for="profile_photo" class="cursor-pointer block relative">
+                            <div class="w-32 h-32 rounded-2xl shadow-lg bg-primary-fixed flex items-center justify-center text-primary text-5xl font-bold overflow-hidden border-4 border-surface-container-low transition-all group-hover:border-primary/30">
+                                <img id="avatar_preview" src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
+                                
+                                <!-- Hover Overlay -->
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+                                </div>
+                            </div>
+                            <input type="file" name="profile_photo" id="profile_photo" class="hidden" accept="image/*" onchange="previewImage(this)">
+                        </label>
+                        @error('profile_photo') <span class="text-error text-xs absolute -bottom-6 left-0 w-max">{{ $message }}</span> @enderror
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-on-surface">{{ auth()->user()->name }}</h3>
                         <p class="text-on-surface-variant font-medium">Inscrit depuis le {{ optional(auth()->user()->created_at)->translatedFormat('d F Y') ?? 'N/A' }}</p>
+                        <p class="text-xs text-primary font-bold mt-2 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">info</span>
+                            Cliquez sur l'image pour la modifier
+                        </p>
                     </div>
                 </div>
                 
@@ -122,4 +135,17 @@
         </div>
     </div>
 </form>
+@section('scripts')
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('avatar_preview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+@endsection
 @endsection

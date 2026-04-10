@@ -130,9 +130,7 @@
         
         <div class="mt-auto p-4 bg-surface-container rounded-xl">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-bold">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}
-                </div>
+                <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover">
                 <div class="overflow-hidden">
                     <p class="text-sm font-bold truncate">{{ auth()->user()->name ?? 'Patient' }}</p>
                     <p class="text-xs text-on-surface-variant truncate">Patient</p>
@@ -167,9 +165,7 @@
                 <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
                     <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
                 </button>
-                <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-bold shadow-sm">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}
-                </div>
+                <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover shadow-sm">
             </div>
         </header>
 
