@@ -35,7 +35,9 @@ class User extends Authenticatable
         'numero_securite_sociale',
         'groupe_sanguin',
         'antecedents_medicaux',
-        'allergies'
+        'allergies',
+        'diplome',
+        'appearance_mode',
     ];
 
     /**

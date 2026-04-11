@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html class="light" lang="fr">
+<html class="{{ auth()->user()->appearance_mode ?? 'light' }}" lang="fr">
 <head>
-    
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
-<script id="tailwind-config">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
@@ -77,7 +76,7 @@
         },
       }
     </script>
-<style>
+    <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             display: inline-block;
@@ -90,69 +89,81 @@
         }
         body { font-family: 'Inter', sans-serif; }
         h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        /* Dark mode overrides for background and text if needed beyond Tailwind class */
+        .dark body { background-color: #191c1e; color: #f7f9fb; }
+        .dark header, .dark aside { background-color: #1c2022 !important; border-color: rgba(255,255,255,0.1) !important; }
+        .dark .bg-surface-container-lowest { background-color: #232729 !important; }
     </style>
-
 </head>
-<body class="bg-background text-on-surface min-h-screen flex overflow-hidden">
+<body class="bg-background text-on-surface min-h-screen flex overflow-hidden dark:bg-slate-950 dark:text-slate-100">
     
-<!-- SideNavBar (Shared Component) -->
-<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-950 flex flex-col h-full py-8 border-r-0 font-manrope tracking-normal text-[14px]">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 flex flex-col py-8 border-r border-slate-200 dark:border-slate-800 font-manrope tracking-normal text-[14px]">
 <div class="px-6 py-6 mb-4">
     <x-logo />
 </div>
 <nav class="flex-1 space-y-1">
-<a class="flex items-center {{ request()->routeIs('doctor.dashboard') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.dashboard') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.dashboard') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.dashboard') }}">
 <span class="material-symbols-outlined mr-4">dashboard</span>
 <span>Tableau de bord</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.schedule') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.schedule') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.schedule') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.schedule') }}">
 <span class="material-symbols-outlined mr-4">calendar_today</span>
 <span>Planning</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.patients.*') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.patients.index') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.patients.*') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.patients.index') }}">
 <span class="material-symbols-outlined mr-4">group</span>
 <span>Patients</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.inventory') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.inventory') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.inventory') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.inventory') }}">
 <span class="material-symbols-outlined mr-4">inventory_2</span>
 <span>Inventaire</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.settings') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.settings') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.settings') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.settings') }}">
 <span class="material-symbols-outlined mr-4">settings</span>
 <span>Paramètres</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.profile') ? 'bg-white dark:bg-slate-900 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.profile') }}">
+<a class="flex items-center {{ request()->routeIs('doctor.profile') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.profile') }}">
 <span class="material-symbols-outlined mr-4">account_circle</span>
 <span>Profil</span>
 </a>
 </nav>
+
 <div class="px-6 mt-auto">
-<a href="{{ route('doctor.schedule') }}" class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-transform duration-200">
-<span class="material-symbols-outlined">add</span>
-<span>Nouveau Rendez-vous</span>
-</a>
+    <div class="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-2xl mb-4">
+        <div class="flex items-center gap-3">
+            <img src="{{ auth()->user()->profile_photo_url }}" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20">
+            <div class="min-w-0">
+                <p class="text-xs font-bold text-teal-900 dark:text-teal-100 truncate">{{ auth()->user()->name }}</p>
+                <p class="text-[10px] text-teal-700/70 dark:text-teal-400 truncate">{{ auth()->user()->specialiste ?? 'Médecin' }}</p>
+            </div>
+        </div>
+    </div>
+    <a href="{{ route('doctor.schedule') }}" class="w-full bg-primary text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-transform duration-200 shadow-lg shadow-primary/20">
+        <span class="material-symbols-outlined text-sm">add</span>
+        <span>Nouveau RDV</span>
+    </a>
 </div>
 </aside>
+
 <!-- Main Content Area -->
 <main class="ml-64 flex-1 flex flex-col h-screen overflow-hidden">
-    <header class="w-full sticky top-0 z-40 bg-slate-50/80 backdrop-blur-xl flex justify-between items-center px-8 py-3 flex-shrink-0 border-b border-outline-variant/20">
+    <header class="w-full sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center px-8 py-3 flex-shrink-0 border-b border-slate-200 dark:border-slate-800">
         <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">medical_services</span>
-            <span class="text-sm font-semibold text-on-surface-variant font-manrope">@yield('page-title', 'Espace Médecin')</span>
+            <span class="text-sm font-semibold text-on-surface-variant font-manrope dark:text-slate-300">@yield('page-title', 'Espace Médecin')</span>
         </div>
         <div class="flex items-center gap-4">
             <div class="relative group">
                 <span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors">notifications</span>
                 <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
             </div>
-            <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700">
+            <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
                 <div class="text-right hidden sm:block">
-                    <p class="text-xs font-bold text-on-surface">{{ Auth::user()->name ?? 'Dr. Sanctuary' }}</p>
-                    <p class="text-[10px] text-on-surface-variant">Médecin Spécialiste</p>
+                    <p class="text-xs font-bold text-on-surface dark:text-slate-100">{{ Auth::user()->name }}</p>
+                    <p class="text-[10px] text-on-surface-variant dark:text-slate-400">{{ Auth::user()->specialiste ?? 'Spécialiste' }}</p>
                 </div>
-                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed bg-teal-100 flex items-center justify-center font-bold text-primary">
-                    {{ substr(Auth::user()->name ?? 'D', 0, 1) }}
-                </div>
+                <img src="{{ auth()->user()->profile_photo_url }}" class="w-10 h-10 rounded-full object-cover border-2 border-primary-fixed">
                 <form method="POST" action="{{ route('logout') }}" class="ml-2">
                     @csrf
                     <button type="submit" class="text-red-400 hover:text-red-600 transition-colors" title="Déconnexion">

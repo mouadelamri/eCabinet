@@ -58,7 +58,10 @@ Route::middleware(['auth', 'CheckDoctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('/patients/{id}/reports', [DoctorController::class, 'patientReports'])->name('patients.reports');
     Route::get('/inventory', [DoctorController::class, 'inventory'])->name('inventory');
     Route::get('/profile', [DoctorController::class, 'profile'])->name('profile');
+    Route::post('/profile', [DoctorController::class, 'updateProfile'])->name('profile.update');
     Route::get('/settings', [DoctorController::class, 'settings'])->name('settings');
+    Route::post('/settings', [DoctorController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/patients/{id}/export', [DoctorController::class, 'exportPatient'])->name('patients.export');
     Route::post('/consultation/{rendezvous_id}', [DoctorController::class, 'completeConsultation'])->name('consultation.store');
 });
 
