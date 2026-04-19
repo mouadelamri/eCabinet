@@ -181,6 +181,9 @@
 <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Prescriptions Actives</h3>
 <span class="text-[10px] bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">3 EN COURS</span>
 </div>
+<a href="{{ route('doctor.ordonnance.export', 1) }}" class="text-primary hover:underline text-sm font-bold flex items-center gap-1">
+    <span class="material-symbols-outlined text-sm">download</span> PDF
+</a>
 <div class="space-y-3">
 <div class="p-4 rounded-xl bg-white border border-outline-variant/10">
 <h5 class="font-bold text-on-surface text-sm">Amoxicilline 500mg</h5>

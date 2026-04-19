@@ -12,7 +12,7 @@ use App\Models\Patient;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class DoctorController extends Controller
 {
     public function dashboard()
@@ -27,12 +27,11 @@ class DoctorController extends Controller
             ->orderBy('date_heure', 'asc')
             ->get();
 
-        // 2. Stats
-        $monthlyPatientsCount = Consultation::where('doctor_id', $doctor->id)
-            ->whereMonth('created_at', Carbon::now()->month)
+       // 2. Stats
+        $monthlyPatientsCount = RendezVous::where('medecin_id', $doctor->id)
+            ->whereMonth('date_heure', Carbon::now()->month)
             ->distinct('patient_id')
-            ->count();
-
+            ->count('patient_id');
         // Assuming max capacity is 20 for rate calculation
         $maxCapacity = 20;
         $occupancyRate = min(100, round((count($todayAppointments) / $maxCapacity) * 100));
@@ -65,7 +64,11 @@ class DoctorController extends Controller
     public function patientRecord($id)
     {
         $patient = Patient::findOrFail($id);
-        $consultations = Consultation::where('patient_id', $id)->latest()->get();
+        
+        $consultations = Consultation::whereHas('rendezVous', function($query) use ($id) {
+            $query->where('patient_id', $id);
+        })->latest()->get();
+
         return view('doctor.console', compact('patient', 'consultations'));
     }
 
@@ -142,10 +145,14 @@ class DoctorController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function exportPatient($id)
+   public function exportPatient($id)
     {
         $patient = Patient::findOrFail($id);
-        $consultations = Consultation::where('patient_id', $id)->latest()->get();
+        
+        // نفس الإصلاح هنا
+        $consultations = Consultation::whereHas('rendezVous', function($query) use ($id) {
+            $query->where('patient_id', $id);
+        })->latest()->get();
 
         $headers = [
             'Content-type' => 'text/csv',
@@ -165,11 +172,14 @@ class DoctorController extends Controller
             fputcsv($file, ['Date', 'Motif', 'Observations', 'Diagnostic']);
 
             foreach ($consultations as $consultation) {
+                
+                $motif = $consultation->rendezVous ? $consultation->rendezVous->motif : 'N/A';
+                
                 fputcsv($file, [
                     $consultation->created_at->format('d/m/Y H:i'),
-                    $consultation->motif,
-                    $consultation->observations,
-                    $consultation->diagnostic
+                    $motif,
+                    $consultation->notes_privees ?? 'N/A',
+                    $consultation->compte_rendu ?? 'N/A'
                 ]);
             }
             fclose($file);
@@ -177,10 +187,54 @@ class DoctorController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
-
     public function completeConsultation(Request $request, $rendezvous_id)
     {
         // To be implemented
         return back()->with('success', 'Consultation complete.');
+    }
+    public function exportOrdonnance($id)
+    {
+        $ordonnance = \App\Models\Ordonnance::with('consultation.rendezVous.patient')->findOrFail($id);
+        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('doctor.pdf.ordonnance', compact('ordonnance'));
+        $nomPatient = $ordonnance->consultation->rendezVous->patient->name ?? 'Patient';
+        
+        return $pdf->stream('Ordonnance_'.$nomPatient.'.pdf');
+    }
+    public function createConsultation($id)
+    {
+        $patient = Patient::findOrFail($id);
+        return view('doctor.consultation_create', compact('patient'));
+    }
+
+    public function storeConsultation(Request $request, $id)
+    {
+        $doctor = Auth::user();
+        $rendezVous = RendezVous::firstOrCreate(
+            ['patient_id' => $id, 'medecin_id' => $doctor->id, 'date_heure' => \Carbon\Carbon::today()],
+            [
+                'statut' => 'COMPLETED',
+                'motif'  => 'Consultation directe' 
+            ]
+        );
+
+       $consultation = Consultation::create([
+            'rendez_vous_id'   => $rendezVous->id,
+            'poids'            => filter_var($request->poids, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
+            'temperature'      => filter_var($request->temperature, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
+            'tension'          => $request->tension, 
+            'rythme_cardiaque' => filter_var($request->rythme_cardiaque, FILTER_SANITIZE_NUMBER_INT), 
+            'compte_rendu'     => $request->compte_rendu,
+            'notes_privees'    => $request->notes_privees,
+        ]);
+
+        if ($request->filled('medicaments')) {
+            Ordonnance::create([
+                'consultation_id' => $consultation->id,
+                'contenu_medicaments'     => $request->medicaments,
+            ]);
+        }
+
+        return redirect()->route('doctor.patients.show', $id)->with('success', 'Consultation et Ordonnance enregistrées avec succès !');
     }
 }
