@@ -220,14 +220,24 @@
                     <p class="text-sm font-bold text-primary">{{ \Carbon\Carbon::parse($rdv->date_heure)->format('H:i') }}</p>
                     <p class="text-xs text-on-surface-variant">{{ \Carbon\Carbon::parse($rdv->date_heure)->format('d M') }}</p>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-bold
-                    {{ $rdv->statut === 'CONFIRMED' ? 'bg-teal-100 text-teal-700' : '' }}
-                    {{ $rdv->statut === 'PENDING' ? 'bg-amber-100 text-amber-700' : '' }}
-                    {{ $rdv->statut === 'CANCELLED' ? 'bg-red-100 text-red-700' : '' }}
-                    {{ !in_array($rdv->statut ?? '', ['CONFIRMED','PENDING','CANCELLED']) ? 'bg-surface-container text-on-surface-variant' : '' }}
-                ">
-                    {{ $rdv->statut ?? 'N/A' }}
-                </span>
+                <div class="flex items-center gap-2 shrink-0">
+                    @if($rdv->statut === 'PENDING' || $rdv->statut === 'EN_ATTENTE')
+                    <form action="{{ route('doctor.rendezvous.confirm', $rdv->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-3 py-1 bg-primary text-on-primary text-[10px] font-bold rounded-lg hover:opacity-90 transition-opacity">
+                            Confirmer
+                        </button>
+                    </form>
+                    @endif
+                    <span class="px-3 py-1 rounded-full text-xs font-bold
+                        {{ $rdv->statut === 'CONFIRMED' ? 'bg-teal-100 text-teal-700' : '' }}
+                        {{ $rdv->statut === 'PENDING' ? 'bg-amber-100 text-amber-700' : '' }}
+                        {{ $rdv->statut === 'CANCELLED' ? 'bg-red-100 text-red-700' : '' }}
+                        {{ !in_array($rdv->statut ?? '', ['CONFIRMED','PENDING','CANCELLED']) ? 'bg-surface-container text-on-surface-variant' : '' }}
+                    ">
+                        {{ $rdv->statut ?? 'N/A' }}
+                    </span>
+                </div>
             </div>
             @endforeach
         </div>

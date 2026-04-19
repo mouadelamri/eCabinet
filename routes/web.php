@@ -12,7 +12,11 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+    if ($user->role === 'ADMIN') return redirect()->route('admin.dashboard');
+    if ($user->role === 'DOCTOR') return redirect()->route('doctor.dashboard');
+    if ($user->role === 'SECRETARY') return redirect()->route('secretary.dashboard');
+    return redirect()->route('patient.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -21,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'checkAdmin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
     Route::get('/doctors', [AdminController::class, 'doctors'])->name('doctors');
     Route::get('/secretaries', [AdminController::class, 'secretaries'])->name('secretaries');
@@ -43,9 +47,11 @@ Route::middleware(['auth'])->prefix('patient')->name('patient.')->group(function
     Route::get('/rendezvous', [PatientController::class, 'appointments'])->name('appointments');
     Route::get('/rendezvous/nouveau', [PatientController::class, 'bookAppointment'])->name('appointments.create');
     Route::post('/rendezvous', [PatientController::class, 'requestAppointment'])->name('appointments.store');
+    Route::post('/rendezvous/{id}/cancel', [PatientController::class, 'cancelAppointment'])->name('appointments.cancel');
     Route::get('/dossier', [PatientController::class, 'medicalRecord'])->name('dossier');
     Route::get('/parametres', [PatientController::class, 'settings'])->name('settings');
     Route::patch('/parametres', [PatientController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/doctors/{id}/availability', [PatientController::class, 'doctorAvailability'])->name('doctor.availability');
 });
 //secretary portal routes
 Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(function () {
@@ -67,6 +73,7 @@ use App\Http\Controllers\DoctorController;
 Route::middleware(['auth', 'CheckDoctor'])->prefix('doctor')->name('doctor.')->group(function () {
     Route::get('/', [DoctorController::class, 'dashboard'])->name('dashboard');
     Route::get('/schedule', [DoctorController::class, 'schedule'])->name('schedule');
+    Route::post('/availability', [DoctorController::class, 'saveAvailability'])->name('availability.save');
     Route::get('/patients', [DoctorController::class, 'patients'])->name('patients.index');
     Route::get('/patients/{id}', [DoctorController::class, 'patientRecord'])->name('patients.show');
     Route::get('/patients/{id}/analyses', [DoctorController::class, 'patientAnalyses'])->name('patients.analyses');
@@ -77,10 +84,9 @@ Route::middleware(['auth', 'CheckDoctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('/settings', [DoctorController::class, 'settings'])->name('settings');
     Route::post('/settings', [DoctorController::class, 'updateSettings'])->name('settings.update');
     Route::get('/patients/{id}/export', [DoctorController::class, 'exportPatient'])->name('patients.export');
-Route::get('/ordonnances/{id}/export', [DoctorController::class, 'exportOrdonnance'])->name('ordonnance.export');
-Route::get('/patients/{id}/consultation/create', [DoctorController::class, 'createConsultation'])->name('consultation.create');
+    Route::post('/rendezvous/{id}/confirm', [DoctorController::class, 'confirmAppointment'])->name('rendezvous.confirm');
     Route::post('/patients/{id}/consultation', [DoctorController::class, 'storeConsultation'])->name('consultation.store');
-    Route::post('/consultation/{rendezvous_id}', [DoctorController::class, 'completeConsultation'])->name('consultation.store');
+    Route::post('/consultation/{rendezvous_id}', [DoctorController::class, 'completeConsultation'])->name('consultation.complete');
 });
 
 require __DIR__.'/auth.php';

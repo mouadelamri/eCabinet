@@ -188,7 +188,7 @@
                                     <div>
                                         <h5 class="font-bold text-on-surface text-sm">Ordonnance délivrée</h5>
                                         <ul class="text-xs text-on-surface-variant/80 font-medium space-y-1 list-disc ml-4 mt-2">
-                                            @foreach(explode("\n", $consultation->ordonnance->medicaments) as $medicament)
+                                            @foreach(explode("\n", $consultation->ordonnance->contenu_medicaments) as $medicament)
                                                 @if(trim($medicament))
                                                     <li>{{ $medicament }}</li>
                                                 @endif

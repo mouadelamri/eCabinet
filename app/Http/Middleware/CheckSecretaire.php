@@ -16,10 +16,15 @@ class CheckSecretaire
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role !== 'SECRETARY')
-        return response()->json([
-        'non authantficated'
-        ]);
-        return $next($request);
+        if (Auth::check() && Auth::user()->role === 'SECRETARY') {
+            return $next($request);
+        }
+
+        // Redirect to the appropriate dashboard based on role
+        if (Auth::check()) {
+            return redirect()->route('dashboard')->with('error', 'Accès réservé au secrétariat.');
+        }
+
+        return redirect()->route('login');
     }
 }

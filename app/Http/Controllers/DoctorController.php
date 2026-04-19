@@ -13,6 +13,8 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\DoctorAvailability;
+
 class DoctorController extends Controller
 {
     public function dashboard()
@@ -50,9 +52,30 @@ class DoctorController extends Controller
         ));
     }
 
-    public function schedule()
+
+    public function schedule(Request $request)
     {
-        return view('doctor.schedule');
+        $weekOffset = (int) $request->get('week', 0);
+        $weekStart  = Carbon::now()->startOfWeek()->addWeeks($weekOffset);
+        $weekEnd    = $weekStart->copy()->endOfWeek();
+
+        $availabilities = DoctorAvailability::where('user_id', Auth::id())
+            ->orderBy('day_of_week')
+            ->get()
+            ->keyBy('day_of_week');
+
+        for ($i = 0; $i <= 6; $i++) {
+            if (!isset($availabilities[$i])) {
+                $availabilities[$i] = new DoctorAvailability([
+                    'day_of_week' => $i,
+                    'is_working'  => false,
+                    'start_time'  => '09:00',
+                    'end_time'    => '17:00'
+                ]);
+            }
+        }
+
+        return view('doctor.schedule', compact('availabilities', 'weekStart', 'weekEnd', 'weekOffset'));
     }
 
     public function patients()
@@ -189,8 +212,17 @@ class DoctorController extends Controller
     }
     public function completeConsultation(Request $request, $rendezvous_id)
     {
-        // To be implemented
-        return back()->with('success', 'Consultation complete.');
+        $rdv = RendezVous::where('medecin_id', Auth::id())->findOrFail($rendezvous_id);
+        $rdv->update(['statut' => 'COMPLETED']);
+
+        // Log activity
+        UserActivity::create([
+            'user_id' => Auth::id(),
+            'type' => 'CONSULTATION_COMPLETED',
+            'description' => "Consultation terminée pour le patient " . ($rdv->patient->name ?? 'inconnu'),
+        ]);
+
+        return back()->with('success', 'La consultation a été marquée comme terminée.');
     }
     public function exportOrdonnance($id)
     {
@@ -205,6 +237,52 @@ class DoctorController extends Controller
     {
         $patient = Patient::findOrFail($id);
         return view('doctor.consultation_create', compact('patient'));
+    }
+
+    public function saveAvailability(Request $request)
+    {
+        $request->validate([
+            'availabilities' => 'required|array',
+            'availabilities.*.day_of_week' => 'required|integer|min:0|max:6',
+            'availabilities.*.start_time' => 'nullable|date_format:H:i',
+            'availabilities.*.end_time' => 'nullable|date_format:H:i',
+        ]);
+
+        foreach ($request->availabilities as $dayData) {
+            DoctorAvailability::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'day_of_week' => $dayData['day_of_week'],
+                ],
+                [
+                    'is_working' => isset($dayData['is_working']),
+                    'start_time' => $dayData['start_time'] ?? '09:00',
+                    'end_time'   => $dayData['end_time'] ?? '17:00',
+                ]
+            );
+        }
+
+        return back()->with('success', 'Disponibilités mises à jour avec succès.');
+    }
+
+    public function confirmAppointment($id)
+    {
+        $rdv = RendezVous::where('medecin_id', Auth::id())->findOrFail($id);
+        
+        if ($rdv->statut === 'PENDING' || $rdv->statut === 'EN_ATTENTE') {
+            $rdv->update(['statut' => 'CONFIRMED']);
+            
+            // Log activity
+            UserActivity::create([
+                'user_id' => Auth::id(),
+                'type' => 'APPOINTMENT_CONFIRMED',
+                'description' => "Rendez-vous confirmé pour le patient " . ($rdv->patient->name ?? 'inconnu'),
+            ]);
+
+            return back()->with('success', 'Rendez-vous confirmé avec succès.');
+        }
+
+        return back()->with('error', 'Impossible de confirmer ce rendez-vous.');
     }
 
     public function storeConsultation(Request $request, $id)

@@ -97,7 +97,15 @@
                             <p class="text-xs text-on-surface-variant dark:text-slate-400">{{ $appointment->motif ?? 'Consultation' }}</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold rounded-full uppercase tracking-tighter">{{ $appointment->statut }}</span>
+                            @if($appointment->statut === 'PENDING' || $appointment->statut === 'EN_ATTENTE')
+                            <form action="{{ route('doctor.rendezvous.confirm', $appointment->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="px-3 py-1 bg-primary text-on-primary text-[10px] font-bold rounded-lg hover:opacity-90 transition-opacity">
+                                    Confirmer
+                                </button>
+                            </form>
+                            @endif
+                            <span class="px-3 py-1 {{ $appointment->statut === 'CONFIRMED' ? 'bg-teal-100 text-teal-700' : 'bg-secondary-fixed text-on-secondary-fixed' }} text-[10px] font-bold rounded-full uppercase tracking-tighter">{{ $appointment->statut }}</span>
                             <a href="{{ route('doctor.patients.show', $appointment->patient_id) }}" class="p-2 text-slate-300 hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined">chevron_right</span>
                             </a>
