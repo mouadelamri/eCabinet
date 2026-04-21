@@ -50,7 +50,7 @@
                         <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest pl-1">Mot De Passe</label>
                         <input name="password" type="password" required class="w-full px-4 py-3 bg-surface-container-high border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="••••••••" />
                     </div>
-                    
+
                     <div class="pt-4">
                         <button type="submit" class="w-full py-3 bg-secondary-container/10 text-secondary font-bold rounded-lg hover:bg-secondary-container/20 transition-colors">
                             Valider l'inscription
@@ -88,7 +88,7 @@
         <!-- List View -->
         <section class="col-span-12 lg:col-span-8">
             <div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm">
-                @if($secretaries->isEmpty())
+                @if($secretaries->count() == 0)
                     <div class="p-10 text-center text-on-surface-variant font-medium">Aucun secrétaire trouvé.</div>
                 @else
                 <div class="overflow-x-auto">
@@ -138,9 +138,9 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- Footer Info -->
-                <div class="p-6 flex justify-between items-center bg-surface-container-high/20">
-                    <p class="text-xs text-on-surface-variant">Affichage de <span class="font-bold text-on-surface">{{ $secretaries->count() }}</span> collaborateurs</p>
+               <!-- Pagination -->
+                <div class="mt-4 flex justify-center">
+                    {{ $secretaries->links() }}
                 </div>
                 @endif
             </div>

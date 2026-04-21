@@ -3,6 +3,18 @@
 @section('title', 'Mes Rendez-vous — eCabinet')
 
 @section('content')
+@if(session('success'))
+    <div class="mb-6 p-4 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined">check_circle</span>
+        <p class="font-medium text-sm">{{ session('success') }}</p>
+    </div>
+@endif
+@if(session('error'))
+    <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-800 border border-red-200 flex items-center gap-3 shadow-sm">
+        <span class="material-symbols-outlined">error</span>
+        <p class="font-medium text-sm">{{ session('error') }}</p>
+    </div>
+@endif
 <!-- Page Header & Filters -->
 <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
     <div>
@@ -99,16 +111,20 @@
                                 CONFIRMÉ
                             </span>
                         @elseif($rdv->statut === 'PENDING')
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-teal-600/30 text-teal-600 text-xs font-bold">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/50 text-amber-700 bg-amber-50 text-xs font-bold">
                                 EN ATTENTE
                             </span>
                         @elseif($rdv->statut === 'COMPLETED')
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface text-xs font-bold">
                                 TERMINÉ
                             </span>
-                        @else
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container text-error text-xs font-bold">
+                        @elseif($rdv->statut === 'CANCELLED')
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold">
                                 ANNULÉ
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-bold">
+                                {{ $rdv->statut }}
                             </span>
                         @endif
                     </td>
@@ -116,7 +132,10 @@
                         <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <button class="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">Détails</button>
                             @if(in_array($rdv->statut, ['PENDING', 'CONFIRMED']))
-                                <button class="px-4 py-2 text-sm font-bold text-error border border-error/20 hover:bg-error/5 rounded-lg transition-colors">Annuler</button>
+                                <form action="{{ route('patient.appointments.cancel', $rdv->id) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
+                                    @csrf
+                                    <button type="submit" class="px-4 py-2 text-sm font-bold text-error border border-error/20 hover:bg-error/5 rounded-lg transition-colors">Annuler</button>
+                                </form>
                             @endif
                         </div>
                     </td>

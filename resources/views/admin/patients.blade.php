@@ -11,7 +11,7 @@
             <p class="text-on-surface-variant font-body">Base de données des patients enregistrés au cabinet.</p>
         </div>
         <div class="flex items-center gap-3">
-            <span class="text-sm font-semibold text-primary">{{ $patients->count() }} Patients actifs</span>
+            <span class="text-sm font-semibold text-primary">{{ $patients->total() }} Patients actifs</span>
         </div>
     </div>
 
@@ -96,7 +96,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <!-- Quick Stats Card -->
             <div class="bg-primary/5 p-6 rounded-xl border border-primary/10 relative overflow-hidden group">
                 <div class="relative z-10">
@@ -116,7 +116,7 @@
         <!-- Patient List Section -->
         <section class="col-span-12 xl:col-span-8 space-y-6">
             <div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/5">
-                @if($patients->isEmpty())
+                @if($patients->count() == 0 )
                     <div class="p-10 text-center text-on-surface-variant font-medium">Aucun patient trouvé.</div>
                 @else
                 <div class="overflow-x-auto">
@@ -170,8 +170,8 @@
                     </table>
                 </div>
                 <!-- Pagination -->
-                <div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
-                    <p class="text-xs font-medium text-on-surface-variant">Affichage de {{ $patients->count() }} patients</p>
+                <div class="mt-4 flex justify-center">
+                    {{ $patients->links() }}
                 </div>
                 @endif
             </div>

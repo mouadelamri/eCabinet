@@ -51,14 +51,10 @@
             @endif
         </div>
         <div class="flex flex-col gap-3 w-full md:w-auto shrink-0">
-            <button class="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-95">
-                <span class="material-symbols-outlined">add_circle</span>
-                Nouvelle Consultation
-            </button>
-            <a href="{{ route('doctor.patients.export', $patient->id) }}" class="flex items-center justify-center gap-2 px-6 py-3 bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700">
-                <span class="material-symbols-outlined">download</span>
-                Exporter Dossier (.csv)
-            </a>
+           <a href="{{ route('doctor.consultation.create', $patient->id) }}" class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-full text-sm font-bold shadow-md hover:bg-primary-container hover:text-on-primary-container transition-all">
+    <span class="material-symbols-outlined text-[18px]">add_circle</span>
+    Nouvelle Consultation
+</a>
         </div>
     </section>
 
@@ -70,7 +66,7 @@
                     Historique Médical Dynamique
                 </h3>
                 <div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-0 before:w-0.5 before:bg-outline-variant/30">
-                    @forelse($consultations as $consultation)
+                  @forelse($consultations as $consultation)
                     <div class="relative pl-10">
                         <div class="absolute left-0 top-1.5 w-6 h-6 rounded-full bg-primary-fixed dark:bg-teal-900 flex items-center justify-center z-10">
                             <div class="w-2.5 h-2.5 rounded-full bg-primary dark:bg-teal-400"></div>
@@ -81,9 +77,24 @@
                                 <span class="text-xs text-on-surface-variant dark:text-slate-400 italic">ID: #CS-{{ $consultation->id }}</span>
                             </div>
                             <h4 class="font-bold text-on-surface dark:text-slate-200 group-hover:text-primary transition-colors">{{ $consultation->motif ?? 'Examen général' }}</h4>
+                            
                             <p class="text-sm text-on-surface-variant dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">
-                                {{ $consultation->observations }}
+                                {{ $consultation->compte_rendu ?? $consultation->observations ?? 'Aucun compte rendu.' }}
                             </p>
+
+                            @php
+                                $ordonnance = \App\Models\Ordonnance::where('consultation_id', $consultation->id)->first();
+                            @endphp
+
+                            @if($ordonnance)
+                            <div class="mt-4 pt-3 border-t border-slate-200 dark:border-slate-700">
+                               <a href="{{ route('doctor.ordonnance.export', $ordonnance->id) }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg text-xs font-bold hover:bg-red-600 transition-all shadow-sm">
+    <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+    Télécharger Ordonnance (PDF)
+                               </a>
+                            </div>
+                            @endif
+
                             @if($consultation->diagnostic)
                             <div class="mt-4 p-3 bg-white/50 dark:bg-slate-800 rounded-lg border-l-2 border-secondary">
                                 <p class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">Diagnostic</p>
@@ -137,8 +148,4 @@
         </div>
     </div>
 </div>
-@endsection
-v>
-</div>
-
 @endsection

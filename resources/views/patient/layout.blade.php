@@ -162,8 +162,14 @@
             </div>
 
             <div class="flex items-center space-x-4">
-                <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
+                @php
+                    $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('est_lu', false)->count();
+                @endphp
+                <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative group">
                     <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                    @if($unreadCount > 0)
+                        <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">{{ $unreadCount }}</span>
+                    @endif
                 </button>
                 <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover shadow-sm">
             </div>

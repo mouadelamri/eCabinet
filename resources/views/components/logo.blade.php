@@ -1,4 +1,4 @@
-@props(['iconColor' => 'text-[#1A8F5A]', 'textColor' => 'text-[#144d42] dark:text-[#a0d6cb]', 'iconOnly' => false, 'size' => 'normal'])
+@props(['iconColor' => 'text-[#1A8F5A]', 'textColor' => 'text-[#144d42] dark:text-[#a0d6cb]', 'iconOnly' => false, 'size' => 'normal', 'subtitle' => 'Clinical Admin'])
 
 @php
     $dimensions = $size === 'large' ? '56px' : '40px';
@@ -48,7 +48,7 @@
     <div class="flex flex-col justify-center">
         <h1 class="font-bold tracking-tight {{ $textColor }} leading-none" style="font-family: 'Manrope', sans-serif; font-size: {{ $textSize }};">eCabinet</h1>
         @if($size !== 'large')
-            <p class="font-bold tracking-[0.2em] {{ str_contains($textColor, 'white') ? 'text-white/80' : 'text-slate-400' }} mt-1 uppercase" style="font-family: 'Inter', sans-serif; font-size: {{ $subtextSize }}; line-height: 1;">Clinical Admin</p>
+            <p class="font-bold tracking-[0.2em] {{ str_contains($textColor, 'white') ? 'text-white/80' : 'text-slate-400' }} mt-1 uppercase" style="font-family: 'Inter', sans-serif; font-size: {{ $subtextSize }}; line-height: 1;">{{ $subtitle }}</p>
         @endif
     </div>
     @endif

@@ -93,25 +93,28 @@
             <button class="text-xs font-bold text-primary">Tout marquer comme lu</button>
         </div>
         <div class="space-y-3 flex-1 overflow-y-auto">
-            @if($nextRdv && $nextRdv->statut === 'CONFIRMED')
-            <div class="p-3 bg-surface-container-lowest rounded-lg border-l-4 border-primary flex gap-3">
-                <span class="material-symbols-outlined text-primary text-xl" data-icon="check_circle">check_circle</span>
-                <div>
-                    <p class="text-sm font-bold">Rendez-vous confirmé</p>
-                    <p class="text-xs text-on-surface-variant">Votre visite avec le Dr. {{ $nextRdv->medecin ? $nextRdv->medecin->name : '' }} est validée.</p>
-                    <p class="text-[10px] text-outline mt-1 italic">Récemment</p>
+            @forelse($recentNotifications as $notif)
+                @php
+                    $icon = 'info';
+                    $color = 'tertiary';
+                    if($notif->type === 'CONFIRMATION') { $icon = 'check_circle'; $color = 'primary'; }
+                    if($notif->type === 'REMINDER') { $icon = 'notification_important'; $color = 'secondary'; }
+                    if($notif->type === 'ALERTE') { $icon = 'warning'; $color = 'error'; }
+                @endphp
+                <div class="p-3 bg-surface-container-lowest rounded-lg border-l-4 border-{{ $color }} flex gap-3 {{ $notif->est_lu ? 'opacity-60' : '' }}">
+                    <span class="material-symbols-outlined text-{{ $color }} text-xl" data-icon="{{ $icon }}">{{ $icon }}</span>
+                    <div>
+                        <p class="text-sm font-bold">{{ $notif->type }}</p>
+                        <p class="text-xs text-on-surface-variant">{{ $notif->message }}</p>
+                        <p class="text-[10px] text-outline mt-1 italic">{{ \Carbon\Carbon::parse($notif->sent_at)->diffForHumans() }}</p>
+                    </div>
                 </div>
-            </div>
-            @endif
-
-            <div class="p-3 bg-surface-container-lowest rounded-lg border-l-4 border-tertiary flex gap-3">
-                <span class="material-symbols-outlined text-tertiary text-xl" data-icon="info">info</span>
-                <div>
-                    <p class="text-sm font-bold">Bienvenue sur eCabinet</p>
-                    <p class="text-xs text-on-surface-variant">Votre espace santé personnel a été activé.</p>
-                    <p class="text-[10px] text-outline mt-1 italic">{{ optional($user->created_at)->diffForHumans() ?? '' }}</p>
+            @empty
+                <div class="flex flex-col items-center justify-center py-10 opacity-40">
+                    <span class="material-symbols-outlined text-4xl mb-2" data-icon="notifications_off">notifications_off</span>
+                    <p class="text-xs font-bold uppercase tracking-widest">Aucune notification</p>
                 </div>
-            </div>
+            @endforelse
         </div>
     </div>
 

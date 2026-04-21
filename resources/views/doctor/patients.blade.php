@@ -10,7 +10,7 @@
             <h2 class="text-3xl font-extrabold text-on-surface dark:text-white tracking-tight mb-2">Répertoire des Patients</h2>
             <p class="text-on-surface-variant dark:text-slate-400 flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary dark:text-teal-400">analytics</span>
-                {{ $patients->total() }} patients actifs sous votre supervision
+                {{ $totalPatients }} patients actifs sous votre supervision
             </p>
         </div>
         <div class="flex gap-3">
@@ -29,7 +29,7 @@
         <div class="md:col-span-1 bg-surface-container-lowest dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <p class="text-xs font-bold text-on-surface-variant dark:text-slate-500 uppercase tracking-widest mb-4">Nouveaux (Mois)</p>
             <div class="flex items-end justify-between">
-                <span class="text-4xl font-black text-primary dark:text-teal-400">{{ $patients->where('created_at', '>=', now()->startOfMonth())->count() }}</span>
+                <span class="text-4xl font-black text-primary dark:text-teal-400">{{ $newPatientsThisMonth }}</span>
                 <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary dark:text-teal-400">
                     <span class="material-symbols-outlined">person_add</span>
                 </div>
@@ -38,7 +38,7 @@
         <div class="md:col-span-3 bg-gradient-to-br from-primary/5 to-secondary/5 dark:from-slate-800 dark:to-slate-900 p-6 rounded-2xl border border-primary/10 dark:border-slate-800 flex items-center justify-between">
             <div>
                 <p class="text-xs font-bold text-secondary dark:text-blue-400 uppercase tracking-widest mb-2">Progression de l'activité</p>
-                <p class="text-sm text-on-surface-variant dark:text-slate-400">Vous avez pris en charge {{ $patients->count() }} patients aujourd'hui.</p>
+                <p class="text-sm text-on-surface-variant dark:text-slate-400">Vous avez pris en charge {{ $patientsToday }} patients aujourd'hui.</p>
             </div>
             <div class="hidden md:block">
                 <div class="flex -space-x-3">

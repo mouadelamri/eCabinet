@@ -16,10 +16,18 @@ class checkAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role !== 'ADMIN')
-        return response()->json(['message' => 'You are not admin'], 403);
+        if (Auth::check() && Auth::user()->role === 'ADMIN') {
+            return $next($request);
+        }
 
-        return $next($request);
+        // Redirect to the appropriate dashboard based on role
+        if (Auth::check()) {
+            $role = Auth::user()->role;
+            if ($role === 'DOCTOR') return redirect()->route('doctor.dashboard');
+            if ($role === 'PATIENT') return redirect()->route('patient.dashboard');
+            if ($role === 'SECRETARY') return redirect()->route('secretary.dashboard');
+        }
 
+        return redirect()->route('login');
     }
 }

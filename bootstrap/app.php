@@ -27,8 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
-            if ($request->user() && $request->user()->role === 'ADMIN') {
-                return route('admin.dashboard');
+            if ($user = $request->user()) {
+                if ($user->role === 'ADMIN') {
+                    return route('admin.dashboard');
+                } elseif ($user->role === 'PATIENT') {
+                    return route('patient.dashboard');
+                } elseif ($user->role === 'DOCTOR') {
+                    return route('doctor.dashboard');
+                }
             }
             return route('dashboard');
         });

@@ -79,6 +79,38 @@
             </div>
         </div>
 
+        <!-- Signature Section -->
+        <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
+            <h4 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant dark:text-slate-500 mb-4">Signature Virtuelle</h4>
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/2">
+                    <p class="text-xs text-on-surface-variant dark:text-slate-400 mb-4 italic">Cette signature sera apposée sur vos ordonnances et comptes-rendus. Utilisez une image PNG avec fond transparent pour un meilleur rendu.</p>
+                    <div class="flex items-center gap-4">
+                        <label class="cursor-pointer bg-secondary/10 text-secondary dark:text-blue-400 px-6 py-3 rounded-xl font-bold text-xs hover:bg-secondary/20 transition-all">
+                            <span class="flex items-center gap-2">
+                                <span class="material-symbols-outlined">upload_file</span>
+                                Choisir une signature
+                            </span>
+                            <input name="signature" type="file" class="hidden" onchange="previewSignature(this)">
+                        </label>
+                        @if($user->signature_path)
+                            <span class="text-[10px] text-teal-600 font-bold flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                Signature configurée
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-32 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                    <img id="signature-preview" src="{{ $user->signature_path ? asset('storage/'.$user->signature_path) : '' }}" class="{{ $user->signature_path ? 'max-h-24' : 'hidden' }} object-contain">
+                    <div id="signature-placeholder" class="{{ $user->signature_path ? 'hidden' : '' }} text-slate-300 dark:text-slate-600 flex flex-col items-center">
+                        <span class="material-symbols-outlined text-4xl">signature</span>
+                        <p class="text-[10px] font-bold uppercase mt-2">Aperçu de la signature</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="flex justify-end pt-4">
             <button type="submit" class="bg-primary text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-all active:scale-95">
                 Enregistrer les modifications
@@ -99,6 +131,23 @@ function previewFile() {
 
     if (file) {
         reader.readAsDataURL(file);
+    }
+}
+
+function previewSignature(input) {
+    const preview = document.getElementById('signature-preview');
+    const placeholder = document.getElementById('signature-placeholder');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+        
+        reader.readAsDataURL(input.files[0]);
     }
 }
 </script>

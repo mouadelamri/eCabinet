@@ -63,8 +63,12 @@
                         @error('telephone') <span class="text-error text-xs">{{ $message }}</span> @enderror
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Date de Naissance (Optionnel)</label>
-                        <input class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all outline-none text-on-surface font-medium" type="date"/>
+                        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Date de Naissance</label>
+                        <input name="date_naissance" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all outline-none text-on-surface font-medium" type="date" value="{{ old('date_naissance', auth()->user()->date_naissance) }}"/>
+                    </div>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">N° de Sécurité Sociale</label>
+                        <input name="numero_securite_sociale" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all outline-none text-on-surface font-medium" type="text" value="{{ old('numero_securite_sociale', auth()->user()->numero_securite_sociale) }}" placeholder="Numéro d'immatriculation"/>
                     </div>
                     <div class="md:col-span-2 space-y-2">
                         <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Nouveau mot de passe (Optionnel)</label>
@@ -82,27 +86,32 @@
             <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10">
                 <div class="flex items-center gap-3 mb-8">
                     <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">medical_information</span>
-                    <h3 class="text-xl font-bold text-on-surface">Informations Médicales (Non Modifiable)</h3>
+                    <h3 class="text-xl font-bold text-on-surface">Informations Médicales (Partagées avec votre médecin)</h3>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
                     <div class="md:col-span-4 space-y-4">
-                        <div class="p-6 rounded-2xl bg-secondary-fixed/30 border border-secondary-fixed/50">
+                        <div class="p-6 rounded-2xl bg-secondary-fixed/30 border border-secondary-fixed/50 h-full">
                             <label class="text-xs font-bold text-on-secondary-fixed-variant uppercase mb-2 block">Groupe Sanguin</label>
-                            <div class="flex items-center justify-between">
-                                <span class="text-3xl font-black text-on-secondary-fixed">N/A</span>
+                            <div class="flex items-center gap-4">
+                                <select name="groupe_sanguin" class="bg-transparent text-xl font-black text-on-secondary-fixed border-b border-transparent focus:outline-none focus:border-secondary w-full p-1 appearance-none cursor-pointer">
+                                    <option value="" class="text-base text-gray-800">N/A</option>
+                                    @php $bTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']; @endphp
+                                    @foreach($bTypes as $bg)
+                                        <option value="{{ $bg }}" class="text-base text-gray-800" {{ auth()->user()->groupe_sanguin == $bg ? 'selected' : '' }}>{{ $bg }}</option>
+                                    @endforeach
+                                </select>
                                 <span class="material-symbols-outlined text-secondary text-4xl">bloodtype</span>
                             </div>
                         </div>
                     </div>
                     <div class="md:col-span-8 space-y-6">
                         <div class="space-y-2">
-                            <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Antécédents Médicaux</label>
-                            <div class="space-y-3">
-                                <div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg group hover:bg-surface-container-high transition-colors">
-                                    <div class="mt-1 w-2 h-2 rounded-full bg-primary shrink-0"></div>
-                                    <p class="text-sm text-on-surface font-medium leading-tight">Géré par votre médecin.</p>
-                                </div>
-                            </div>
+                            <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Antécédents Médicaux (Maladies, Chirurgies)</label>
+                            <textarea name="antecedents_medicaux" rows="3" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all outline-none text-on-surface font-medium resize-none shadow-sm" placeholder="Décrivez vos antécédents médicaux personnels ou familiaux ici...">{{ old('antecedents_medicaux', auth()->user()->antecedents_medicaux) }}</textarea>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Allergies</label>
+                            <textarea name="allergies" rows="2" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all outline-none text-on-surface font-medium resize-none shadow-sm" placeholder="Listez vos allergies connues (médicaments, aliments, etc.)...">{{ old('allergies', auth()->user()->allergies) }}</textarea>
                         </div>
                     </div>
                 </div>

@@ -53,19 +53,19 @@ class AdminController extends Controller
 
     public function doctors()
     {
-        $doctors = User::where('role', 'DOCTOR')->latest()->get();
+        $doctors = User::where('role', 'DOCTOR')->latest()->paginate(10);
         return view('admin.doctors', compact('doctors'));
     }
 
     public function secretaries()
     {
-        $secretaries = User::where('role', 'SECRETARY')->latest()->get();
+        $secretaries = User::where('role', 'SECRETARY')->latest()->paginate(10);
         return view('admin.secretaries', compact('secretaries'));
     }
 
     public function patients()
     {
-        $patients = User::where('role', 'PATIENT')->latest()->get();
+        $patients = User::where('role', 'PATIENT')->latest()->paginate(10);
         return view('admin.patients', compact('patients'));
     }
 
@@ -77,7 +77,7 @@ class AdminController extends Controller
         $cloudStorage = SystemSetting::where('key', 'storage_cloud_usage')->value('value') ?? 0;
         $serverUptime = SystemSetting::where('key', 'server_uptime')->value('value') ?? 0;
         $dataEfficiency = SystemSetting::where('key', 'data_efficiency')->value('value') ?? 0;
-        
+
         $alertProtocols = AlertProtocol::all();
         $licenses = ClinicLicense::all();
 

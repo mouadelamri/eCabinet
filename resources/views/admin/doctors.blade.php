@@ -74,7 +74,7 @@
         <div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-[2rem] shadow-[0_10px_30px_-5px_rgba(0,106,97,0.08)] relative overflow-hidden group">
             <div class="relative z-10">
                 <p class="text-[10px] font-bold text-primary mb-4 uppercase tracking-widest">Aperçu de l'équipe</p>
-                <h3 class="text-3xl font-bold font-headline mb-6">{{ $doctors->count() }} Praticiens Actifs</h3>
+                <h3 class="text-3xl font-bold font-headline mb-6">{{ $doctors->total() }} Praticiens Actifs</h3>
                 <div class="flex -space-x-3 mb-8">
                     @foreach($doctors->take(4) as $doc)
                         <div class="w-12 h-12 rounded-full border-4 border-white bg-primary text-on-primary flex flex-col items-center justify-center font-bold text-sm shadow-sm">{{ substr($doc->name, 0, 2) }}</div>
@@ -99,7 +99,7 @@
 
     <!-- Table View -->
     <div class="bg-surface-container-low rounded-[2rem] overflow-hidden shadow-[0_10px_30px_-5px_rgba(0,106,97,0.08)]">
-        @if($doctors->isEmpty())
+        @if($doctors->count() === 0)
             <div class="p-10 text-center text-on-surface-variant font-medium">Aucun médecin trouvé. Veuillez en ajouter un.</div>
         @else
         <div class="overflow-x-auto">
@@ -146,6 +146,10 @@
                 </tbody>
             </table>
         </div>
+                <!-- Pagination -->
+                <div class="mt-4 flex justify-center">
+                    {{ $doctors->links() }}
+                </div>
         @endif
     </div>
 </div>

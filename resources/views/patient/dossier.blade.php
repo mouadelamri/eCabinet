@@ -14,6 +14,43 @@
     <!-- Visualisation du Progrès Section & Consultations -->
     <div class="lg:col-span-8 space-y-6">
         
+        <!-- Profil Santé Section -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/10">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-error/10 flex items-center justify-center rounded-lg">
+                        <span class="material-symbols-outlined text-error">health_and_safety</span>
+                    </div>
+                    <h3 class="font-headline text-lg font-bold">Mon Profil Santé</h3>
+                </div>
+                <a href="{{ route('patient.settings') }}" class="text-xs font-bold text-primary hover:underline">Modifier</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider mb-1">Âge</p>
+                    <p class="font-medium text-sm text-on-surface">{{ $user->date_naissance ? \Carbon\Carbon::parse($user->date_naissance)->age . ' ans' : 'Non précisé' }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider mb-1">Groupe Sanguin</p>
+                    <p class="font-bold text-error text-sm">{{ $user->groupe_sanguin ?? 'Inconnu' }}</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider mb-1">N° Sécurité Sociale</p>
+                    <p class="font-medium text-sm text-on-surface">{{ $user->numero_securite_sociale ?? 'Non renseigné' }}</p>
+                </div>
+                <div class="md:col-span-3">
+                    <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">history_edu</span> Antécédents Médicaux</p>
+                    <p class="text-sm bg-surface-container-high/30 p-3 rounded-lg border border-outline-variant/10 text-on-surface whitespace-pre-line">{{ $user->antecedents_medicaux ?? 'Aucun antécédent signalé.' }}</p>
+                </div>
+                @if($user->allergies)
+                <div class="md:col-span-3">
+                    <p class="text-[10px] text-error uppercase font-bold tracking-wider mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">warning</span> Allergies</p>
+                    <p class="text-sm bg-error-container/10 p-3 rounded-lg border border-error/20 text-red-700 dark:text-red-400 font-medium whitespace-pre-line">{{ $user->allergies }}</p>
+                </div>
+                @endif
+            </div>
+        </div>
+        
         <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/10">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-3">
@@ -151,7 +188,7 @@
                                     <div>
                                         <h5 class="font-bold text-on-surface text-sm">Ordonnance délivrée</h5>
                                         <ul class="text-xs text-on-surface-variant/80 font-medium space-y-1 list-disc ml-4 mt-2">
-                                            @foreach(explode("\n", $consultation->ordonnance->medicaments) as $medicament)
+                                            @foreach(explode("\n", $consultation->ordonnance->contenu_medicaments) as $medicament)
                                                 @if(trim($medicament))
                                                     <li>{{ $medicament }}</li>
                                                 @endif
@@ -198,9 +235,9 @@
                                     <p class="text-[10px] text-on-surface-variant">Ajouté le {{ \Carbon\Carbon::parse($consultation->created_at)->format('d/m/Y') }}</p>
                                 </div>
                             </div>
-                            <button class="p-2 rounded-lg bg-surface-container-lowest group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+                            <a href="{{ route('patient.ordonnance.download', $consultation->ordonnance->id) }}" target="_blank" class="p-2 rounded-lg bg-surface-container-lowest group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                                 <span class="material-symbols-outlined text-lg">download</span>
-                            </button>
+                            </a>
                         </div>
                     @endif
                 @endforeach

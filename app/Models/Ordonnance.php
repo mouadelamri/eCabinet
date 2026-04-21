@@ -12,9 +12,8 @@ class Ordonnance extends Model
         'consultation_id'
     ];
     
-    protected $casts = [
-        'contenu_medicaments' => 'array',
-    ];
+    // Removing array cast to use raw textarea text
+    protected $casts = [];
 
     //relations
     public function consultation()

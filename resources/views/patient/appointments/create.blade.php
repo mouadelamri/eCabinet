@@ -116,26 +116,137 @@
     let selectedDoctorName = null;
     let selectedDate = null;
     let selectedTime = null;
+    let doctorSchedule = {};    // { dayOfWeek: { is_working, start, end } }
+    let workingDays = [];       // [1, 2, 3, ...] (0=Sun, 6=Sat)
 
     function selectDoctor(id, name) {
         selectedDoctorId = id;
         selectedDoctorName = name;
+        selectedDate = null;
+        selectedTime = null;
         document.getElementById('medecin_id').value = id;
-        
+        document.getElementById('datePicker').value = '';
+        document.getElementById('timeSlotsContainer').innerHTML = '<p class="col-span-3 text-xs text-on-surface-variant italic">Sélectionnez une date d\'abord.</p>';
+
         // Update UI
         document.querySelectorAll('.doctor-card').forEach(card => {
             card.classList.remove('ring-primary', 'ring-2', 'bg-primary-container/10');
             card.classList.add('ring-outline-variant/15', 'bg-surface-container-lowest');
             card.querySelector('.doctor-select-lbl').textContent = 'Sélectionner';
         });
-        
         const selectedCard = document.querySelector(`.doctor-card[data-id="${id}"]`);
         selectedCard.classList.remove('ring-outline-variant/15', 'bg-surface-container-lowest');
         selectedCard.classList.add('ring-primary', 'ring-2', 'bg-primary-container/10');
-        selectedCard.querySelector('.doctor-select-lbl').textContent = 'Sélectionné';
+        selectedCard.querySelector('.doctor-select-lbl').textContent = 'Sélectionné ✓';
 
-        updateSummary();
-        checkValidation();
+        // Fetch availability from API
+        fetch(`/patient/doctors/${id}/availability`)
+            .then(r => r.json())
+            .then(data => {
+                workingDays = data.working_days; // e.g. [1,2,3,4,5]
+                doctorSchedule = data.schedule;
+                applyDateRestrictions();
+                updateSummary();
+                checkValidation();
+            });
+    }
+
+    function applyDateRestrictions() {
+        const datePicker = document.getElementById('datePicker');
+        datePicker.removeEventListener('change', onDateChange);
+        datePicker.addEventListener('change', onDateChange);
+
+        // Show visual info below picker about unavailable days
+        const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+        const unavailable = [];
+        for (let d = 0; d <= 6; d++) {
+            if (!workingDays.includes(d)) unavailable.push(dayNames[d]);
+        }
+
+        let infoEl = document.getElementById('availability-info');
+        if (!infoEl) {
+            infoEl = document.createElement('p');
+            infoEl.id = 'availability-info';
+            infoEl.className = 'text-[11px] text-red-600 font-medium mt-2 leading-snug';
+            datePicker.parentElement.after(infoEl);
+        }
+
+        if (unavailable.length > 0) {
+            infoEl.innerHTML = `🚫 Indisponible : <strong>${unavailable.join(', ')}</strong>`;
+        } else {
+            infoEl.textContent = '';
+        }
+    }
+
+    function onDateChange(e) {
+        const val = e.target.value;
+        if (!val) return;
+
+        const day = new Date(val + 'T00:00:00').getDay(); // 0=Sun
+        if (!workingDays.includes(day)) {
+            const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+            showDateError(`⛔ Le médecin n'est pas disponible le ${dayNames[day]}. Veuillez choisir un autre jour.`);
+            e.target.value = '';
+            selectedDate = null;
+            document.getElementById('timeSlotsContainer').innerHTML = '<p class="col-span-3 text-xs text-on-surface-variant italic">Jour non disponible.</p>';
+            checkValidation();
+            return;
+        }
+
+        clearDateError();
+        selectDate(val);
+        loadTimeSlots(day);
+    }
+
+    function showDateError(msg) {
+        let el = document.getElementById('date-error');
+        if (!el) {
+            el = document.createElement('p');
+            el.id = 'date-error';
+            el.className = 'text-xs text-error font-semibold mt-2 p-2 bg-red-50 rounded-lg border border-red-200';
+            document.getElementById('datePicker').closest('div').appendChild(el);
+        }
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    function clearDateError() {
+        const el = document.getElementById('date-error');
+        if (el) el.style.display = 'none';
+    }
+
+    function loadTimeSlots(dayOfWeek) {
+        const container = document.getElementById('timeSlotsContainer');
+        const sched = doctorSchedule[dayOfWeek];
+
+        if (!sched || !sched.is_working) {
+            container.innerHTML = '<p class="col-span-3 text-xs text-on-surface-variant italic">Aucun créneau disponible.</p>';
+            return;
+        }
+
+        // Generate 30-min slots between start & end
+        const slots = [];
+        let [sh, sm] = sched.start.split(':').map(Number);
+        let [eh, em] = sched.end.split(':').map(Number);
+        let cur = sh * 60 + sm;
+        let end = eh * 60 + em;
+        while (cur < end) {
+            const h = String(Math.floor(cur / 60)).padStart(2, '0');
+            const m = String(cur % 60).padStart(2, '0');
+            slots.push(`${h}:${m}`);
+            cur += 30;
+        }
+
+        if (slots.length === 0) {
+            container.innerHTML = '<p class="col-span-3 text-xs text-on-surface-variant italic">Aucun créneau disponible.</p>';
+            return;
+        }
+
+        container.innerHTML = slots.map(t => `
+            <button type="button" class="py-2 text-xs font-semibold rounded-full bg-surface-container-high hover:bg-primary-fixed hover:text-primary transition-all time-slot" data-time="${t}" onclick="selectTime('${t}')">
+                ${t}
+            </button>
+        `).join('');
     }
 
     function selectDate(date) {
@@ -147,17 +258,15 @@
 
     function selectTime(time) {
         selectedTime = time;
-        
-        // Update UI
         document.querySelectorAll('.time-slot').forEach(btn => {
             btn.classList.remove('bg-primary', 'text-white', 'ring-2', 'ring-primary-fixed');
             btn.classList.add('bg-surface-container-high');
         });
-        
         const selectedBtn = document.querySelector(`.time-slot[data-time="${time}"]`);
-        selectedBtn.classList.remove('bg-surface-container-high');
-        selectedBtn.classList.add('bg-primary', 'text-white', 'ring-2', 'ring-primary-fixed');
-
+        if (selectedBtn) {
+            selectedBtn.classList.remove('bg-surface-container-high');
+            selectedBtn.classList.add('bg-primary', 'text-white', 'ring-2', 'ring-primary-fixed');
+        }
         updateDateHeure();
         updateSummary();
         checkValidation();
@@ -165,37 +274,27 @@
 
     function updateDateHeure() {
         if (selectedDate && selectedTime) {
-            document.getElementById('date_heure').value = selectedDate + ' ' + selectedTime;
+            document.getElementById('date_heure').value = selectedDate + ' ' + selectedTime + ':00';
         } else {
             document.getElementById('date_heure').value = '';
         }
     }
 
     function updateSummary() {
-        if(selectedDoctorName || selectedDate || selectedTime) {
+        if (selectedDoctorName || selectedDate || selectedTime) {
             document.getElementById('summaryCard').classList.remove('hidden');
         }
-        
         document.getElementById('summaryDoctor').textContent = selectedDoctorName ? "Dr. " + selectedDoctorName : "-";
-        
         let dateStr = "-";
-        if(selectedDate && selectedTime) {
-            dateStr = selectedDate + " à " + selectedTime;
-        } else if (selectedDate) {
-            dateStr = selectedDate;
-        } else if (selectedTime) {
-            dateStr = selectedTime;
-        }
+        if (selectedDate && selectedTime) dateStr = selectedDate + " à " + selectedTime;
+        else if (selectedDate) dateStr = selectedDate;
+        else if (selectedTime) dateStr = selectedTime;
         document.getElementById('summaryDateTime').textContent = dateStr;
     }
 
     function checkValidation() {
         const btn = document.getElementById('submitBtn');
-        if(selectedDoctorId && selectedDate && selectedTime) {
-            btn.disabled = false;
-        } else {
-            btn.disabled = true;
-        }
+        btn.disabled = !(selectedDoctorId && selectedDate && selectedTime);
     }
 </script>
 @endsection

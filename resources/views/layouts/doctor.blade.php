@@ -100,7 +100,7 @@
 <!-- SideNavBar -->
 <aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 flex flex-col py-8 border-r border-slate-200 dark:border-slate-800 font-manrope tracking-normal text-[14px]">
 <div class="px-6 py-6 mb-4">
-    <x-logo />
+    <x-logo subtitle="Espace Médecin" />
 </div>
 <nav class="flex-1 space-y-1">
 <a class="flex items-center {{ request()->routeIs('doctor.dashboard') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.dashboard') }}">
@@ -139,10 +139,6 @@
             </div>
         </div>
     </div>
-    <a href="{{ route('doctor.schedule') }}" class="w-full bg-primary text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 active:scale-95 transition-transform duration-200 shadow-lg shadow-primary/20">
-        <span class="material-symbols-outlined text-sm">add</span>
-        <span>Nouveau RDV</span>
-    </a>
 </div>
 </aside>
 
@@ -154,9 +150,14 @@
             <span class="text-sm font-semibold text-on-surface-variant font-manrope dark:text-slate-300">@yield('page-title', 'Espace Médecin')</span>
         </div>
         <div class="flex items-center gap-4">
+            @php
+                $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('est_lu', false)->count();
+            @endphp
             <div class="relative group">
                 <span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors">notifications</span>
-                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+                @if($unreadCount > 0)
+                    <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">{{ $unreadCount }}</span>
+                @endif
             </div>
             <div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
                 <div class="text-right hidden sm:block">
@@ -178,10 +179,6 @@
         @yield('content')
     </div>
 </main>
-<!-- FAB for quick action (Contextual Suppression would usually apply, but on a Dashboard it is permitted) -->
-<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-all duration-200 z-50 hover:bg-primary-container" style="box-shadow: 0 10px 30px -5px rgba(0, 106, 97, 0.4)">
-<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">add</span>
-</button>
 
 </body>
 </html>
