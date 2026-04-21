@@ -19,6 +19,12 @@ class RendezVousController extends Controller
         $rendezVous->update([
             'statut' => 'CONFIRMED'
         ]);
+        try {
+            Mail::to($rendezVous->patient->email)->send(new AppointmentConfirmed($rendezVous));
+        } catch (\Exception $e) {
+            // Log the error or handle it as needed
+            \Log::error('Failed to send appointment confirmation email: ' . $e->getMessage());
+        }
         
         return back()->with('success', 'Rendez-vous confirmé et email envoyé !');
     }
