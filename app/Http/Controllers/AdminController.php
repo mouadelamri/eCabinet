@@ -43,7 +43,8 @@ class AdminController extends Controller
             ];
         });
 
-        $latestUsers = User::latest()->take(10)->get();
+        // Filter out ADMIN users from the latest users list
+        $latestUsers = User::where('role', '!=', 'ADMIN')->latest()->take(10)->get();
 
         return view('admin.overview', compact(
             'doctorsCount', 'patientsCount', 'secretariesCount',
@@ -103,8 +104,13 @@ class AdminController extends Controller
 
     public function deleteUser(User $user)
     {
+        // Prevent deleting ADMIN users or deleting oneself
+        if ($user->role === 'ADMIN' || $user->id === auth()->id()) {
+            return back()->with('error', 'Action non autorisée : les administrateurs ne peuvent pas être supprimés via cette interface.');
+        }
+
         $user->delete();
-        return back()->with('success', 'User deleted successfully.');
+        return back()->with('success', 'Utilisateur supprimé avec succès.');
     }
 
     // ─── API / Form POST Methods ──────────────────────────────────────────

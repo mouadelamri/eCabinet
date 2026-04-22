@@ -18,7 +18,6 @@ class RendezVousController extends Controller
     {
         $rdv = RendezVous::where('id', $id)->firstOrFail();
 
-<<<<<<< HEAD
         if ($rdv->statut === 'PENDING' ) {
             $rdv->update(['statut' => 'CONFIRMED']);
 
@@ -34,7 +33,7 @@ class RendezVousController extends Controller
                 Notification::create([
                     'user_id' => $rdv->patient_id,
                     'type' => 'CONFIRMATION',
-                    'message' => "Votre rendez-vous avec le Dr. " . $rdv->medecin_id->name . " pour le " . \Carbon\Carbon::parse($rdv->date_heure)->translatedFormat('d F') . " a été confirmé.",
+                    'message' => "Votre rendez-vous avec le Dr. " . ($rdv->medecin->name ?? 'inconnu') . " pour le " . \Carbon\Carbon::parse($rdv->date_heure)->translatedFormat('d F') . " a été confirmé.",
                     'est_lu' => false,
                     'sent_at' => now(),
                 ]);
@@ -51,52 +50,40 @@ class RendezVousController extends Controller
         }
 
         return back()->with('error', 'Impossible de confirmer ce rendez-vous.');
-=======
-        $rendezVous->update([
-            'statut' => 'CONFIRMED'
-        ]);
-        try {
-            Mail::to($rendezVous->patient->email)->send(new AppointmentConfirmed($rendezVous));
-        } catch (\Exception $e) {
-            // Log the error or handle it as needed
-            \Log::error('Failed to send appointment confirmation email: ' . $e->getMessage());
-        }
-        
-        return back()->with('success', 'Rendez-vous confirmé et email envoyé !');
->>>>>>> dc174713e3e71541fff0f47b8c95220754f9ef05
     }
 
     public function annuler($id)
     {
         $rendezVous = RendezVous::findOrFail($id);
-        if($rendezVous->statut == 'CONFIRMED' || $rendezVous->statut !== 'CANCELLED' ){
-            return back()->with('error' , 'Impossible d\'annuler ce rendez-vous.');
-        }else{
+        
+        if ($rendezVous->statut === 'CANCELLED') {
+            return back()->with('error', 'Ce rendez-vous est déjà annulé.');
+        }
+
         $rendezVous->update([
             'statut' => 'CANCELLED'
         ]);
+
         UserActivity::create([
-                'user_id' => Auth::id(),
-                'type' => 'APPOINTMENT_ANNULEE',
-                'description' => "Rendez-vous annuller pour le patient " . ($rendezVous->patient_id->name ?? 'inconnu'),
+            'user_id' => Auth::id(),
+            'type' => 'APPOINTMENT_ANNULEE',
+            'description' => "Rendez-vous annulé pour le patient " . ($rendezVous->patient->name ?? 'inconnu'),
+        ]);
+
+        // Create In-App Notification for Patient
+        try {
+            Notification::create([
+                'user_id' => $rendezVous->patient_id,
+                'type' => 'ANNULATION',
+                'message' => "Votre rendez-vous avec le Dr. " . ($rendezVous->medecin->name ?? 'inconnu') . " pour le " . \Carbon\Carbon::parse($rendezVous->date_heure)->translatedFormat('d F') . " a été annulé.",
+                'est_lu' => false,
+                'sent_at' => now(),
             ]);
-
-            // Create In-App Notification for Patient
-            try {
-                Notification::create([
-                    'user_id' => $rendezVous->patient_id,
-                    'type' => 'ANNULATION',
-                    'message' => "Votre rendez-vous avec le Dr. " . $rendezVous->medecin_id->name . " pour le " . \Carbon\Carbon::parse($rendezVous->date_heure)->translatedFormat('d F') . " a été annuller.",
-                    'est_lu' => false,
-                    'sent_at' => now(),
-                ]);
-                } catch (\Exception $e) {
-                \Log::error("Failed to notify patient of annulation: " . $e->getMessage());
-            }
-        return back()->with('success' , 'rendez vous annuler');
+        } catch (\Exception $e) {
+            \Log::error("Failed to notify patient of annulation: " . $e->getMessage());
         }
-        
 
+        return back()->with('success', 'Rendez-vous annulé avec succès.');
     }
 }
 ?>
