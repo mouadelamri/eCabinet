@@ -18,6 +18,7 @@ class RendezVousController extends Controller
     {
         $rdv = RendezVous::where('id', $id)->firstOrFail();
 
+<<<<<<< HEAD
         if ($rdv->statut === 'PENDING' ) {
             $rdv->update(['statut' => 'CONFIRMED']);
 
@@ -50,6 +51,19 @@ class RendezVousController extends Controller
         }
 
         return back()->with('error', 'Impossible de confirmer ce rendez-vous.');
+=======
+        $rendezVous->update([
+            'statut' => 'CONFIRMED'
+        ]);
+        try {
+            Mail::to($rendezVous->patient->email)->send(new AppointmentConfirmed($rendezVous));
+        } catch (\Exception $e) {
+            // Log the error or handle it as needed
+            \Log::error('Failed to send appointment confirmation email: ' . $e->getMessage());
+        }
+        
+        return back()->with('success', 'Rendez-vous confirmé et email envoyé !');
+>>>>>>> dc174713e3e71541fff0f47b8c95220754f9ef05
     }
 
     public function annuler($id)
