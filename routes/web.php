@@ -86,7 +86,6 @@ Route::middleware(['auth', 'CheckDoctor'])->prefix('doctor')->name('doctor.')->g
     Route::get('/patients/{id}', [DoctorController::class, 'patientRecord'])->name('patients.show');
     Route::get('/patients/{id}/analyses', [DoctorController::class, 'patientAnalyses'])->name('patients.analyses');
     Route::get('/patients/{id}/reports', [DoctorController::class, 'patientReports'])->name('patients.reports');
-    Route::get('/inventory', [DoctorController::class, 'inventory'])->name('inventory');
     Route::get('/profile', [DoctorController::class, 'profile'])->name('profile');
     Route::post('/profile', [DoctorController::class, 'updateProfile'])->name('profile.update');
     Route::get('/settings', [DoctorController::class, 'settings'])->name('settings');

@@ -26,7 +26,7 @@
                 <div>
                     <p class="text-label-sm text-on-surface-variant dark:text-slate-400 text-[10px] uppercase font-semibold tracking-wider">Âge / Sexe</p>
                     <p class="font-medium">
-                        {{ \Carbon\Carbon::parse($patient->date_naissance)->age }} ans, 
+                        {{ \Carbon\Carbon::parse($patient->date_naissance)->age }} ans,
                         {{ $patient->genre ?? 'N/A' }}
                     </p>
                 </div>
@@ -77,7 +77,7 @@
                                 <span class="text-xs text-on-surface-variant dark:text-slate-400 italic">ID: #CS-{{ $consultation->id }}</span>
                             </div>
                             <h4 class="font-bold text-on-surface dark:text-slate-200 group-hover:text-primary transition-colors">{{ $consultation->motif ?? 'Examen général' }}</h4>
-                            
+
                             <p class="text-sm text-on-surface-variant dark:text-slate-400 mt-2 line-clamp-3 leading-relaxed">
                                 {{ $consultation->compte_rendu ?? $consultation->observations ?? 'Aucun compte rendu.' }}
                             </p>
@@ -111,39 +111,7 @@
         </div>
 
         <div class="space-y-8">
-            <!-- Facteurs de Risque / Antécédents -->
-            <section class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                <h3 class="text-lg font-headline font-bold text-on-surface dark:text-white mb-6 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-red-500">warning</span>
-                    Alertes & Antécédents
-                </h3>
-                <div class="space-y-4">
-                    <div class="p-4 bg-error-container/10 border-l-4 border-error rounded-r-xl">
-                        <p class="text-[10px] font-bold text-error uppercase tracking-widest mb-1">Médicaux</p>
-                        <p class="text-sm font-semibold dark:text-slate-300">{{ $patient->antecedents_medicaux ?? 'Aucun antécédent majeur signalé.' }}</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Quick Stats -->
-            <section class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
-                <h3 class="text-lg font-headline font-bold text-on-surface dark:text-white mb-6 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">monitoring</span>
-                    Dernières Constantes
-                </h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl text-center border border-slate-100 dark:border-slate-700">
-                        <p class="text-[10px] uppercase font-bold text-on-surface-variant dark:text-slate-400 mb-1">Tension (Dernière)</p>
-                        <p class="text-2xl font-black text-primary dark:text-teal-400">-- <span class="text-xs font-normal">mmHg</span></p>
-                    </div>
-                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl text-center border border-slate-100 dark:border-slate-700">
-                        <p class="text-[10px] uppercase font-bold text-on-surface-variant dark:text-slate-400 mb-1">Poids</p>
-                        <p class="text-2xl font-black text-secondary dark:text-blue-400">-- <span class="text-xs font-normal">kg</span></p>
-                    </div>
-                </div>
-                <button class="w-full mt-4 py-2 text-[10px] font-bold text-primary dark:text-teal-400 border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors">
-                    VOIR GRAPHIQUES
-                </button>
+           
             </section>
         </div>
     </div>

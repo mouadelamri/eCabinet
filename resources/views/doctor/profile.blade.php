@@ -18,7 +18,7 @@
 
     <form action="{{ route('doctor.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
         @csrf
-        
+
         <!-- Profile Header Card -->
         <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-3xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
             <div class="flex flex-col md:flex-row items-center gap-8">
@@ -46,7 +46,7 @@
             <!-- Basic Info -->
             <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
                 <h4 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant dark:text-slate-500 mb-4">Informations de base</h4>
-                
+
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-on-surface-variant dark:text-slate-400">Nom complet</label>
                     <input type="text" name="name" value="{{ old('name', $user->name) }}" class="w-full bg-surface-container-low dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary dark:text-white" required>
@@ -61,7 +61,7 @@
             <!-- Professional Info -->
             <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 space-y-4">
                 <h4 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant dark:text-slate-500 mb-4">Expertise & Contact</h4>
-                
+
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-on-surface-variant dark:text-slate-400">Spécialité</label>
                     <input type="text" name="specialiste" value="{{ old('specialiste', $user->specialiste) }}" placeholder="Ex: Cardiologie, Pédiatrie..." class="w-full bg-surface-container-low dark:bg-slate-800 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary dark:text-white">
@@ -137,16 +137,16 @@ function previewFile() {
 function previewSignature(input) {
     const preview = document.getElementById('signature-preview');
     const placeholder = document.getElementById('signature-placeholder');
-    
+
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-        
+
         reader.onload = function(e) {
             preview.src = e.target.result;
             preview.classList.remove('hidden');
             placeholder.classList.add('hidden');
         }
-        
+
         reader.readAsDataURL(input.files[0]);
     }
 }

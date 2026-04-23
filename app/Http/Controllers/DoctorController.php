@@ -131,10 +131,7 @@ class DoctorController extends Controller
         return view('doctor.reports', compact('patient'));
     }
 
-    public function inventory()
-    {
-        return view('doctor.inventory');
-    }
+
 
     public function profile()
     {
@@ -143,43 +140,54 @@ class DoctorController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'specialiste' => 'nullable|string|max:255',
-            'diplome' => 'nullable|string|max:255',
-            'telephone_pro' => 'nullable|string|max:20',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'specialiste' => 'nullable|string|max:255',
+        'diplome' => 'nullable|string|max:255',
+        'telephone_pro' => 'nullable|string|max:20',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        $data = $request->only(['name', 'email', 'specialiste', 'diplome', 'telephone_pro']);
+    $data = $request->only([
+        'name',
+        'email',
+        'specialiste',
+        'diplome',
+        'telephone_pro'
+    ]);
 
-        if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($user->profile_photo_path) {
-                Storage::disk('public')->delete($user->profile_photo_path);
-            }
-            $path = $request->file('photo')->store('profile-photos', 'public');
-            $data['profile_photo_path'] = $path;
+    // PHOTO
+    if ($request->hasFile('photo')) {
+
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
         }
 
-        if ($request->hasFile('signature')) {
-            // Delete old signature if exists
-            if ($user->signature_path) {
-                Storage::disk('public')->delete($user->signature_path);
-            }
-            $path = $request->file('signature')->store('signatures', 'public');
-            $data['signature_path'] = $path;
-        }
-
-        $user->update($data);
-
-        return back()->with('success', 'Profil mis à jour avec succès.');
+        $data['profile_photo_path'] =
+            $request->file('photo')->store('profile-photos', 'public');
     }
+
+    // SIGNATURE
+    if ($request->hasFile('signature')) {
+
+        if ($user->signature_path) {
+            Storage::disk('public')->delete($user->signature_path);
+        }
+
+        $data['signature_path'] =
+            $request->file('signature')->store('signatures', 'public');
+    }
+
+    $user->update($data);
+
+
+    return back()->with('success', 'Profil mis à jour avec succès.');
+}
 
     public function settings()
     {

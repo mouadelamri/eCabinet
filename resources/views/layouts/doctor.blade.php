@@ -96,7 +96,7 @@
     </style>
 </head>
 <body class="bg-background text-on-surface min-h-screen flex overflow-hidden dark:bg-slate-950 dark:text-slate-100">
-    
+
 <!-- SideNavBar -->
 <aside class="fixed left-0 top-0 h-full w-64 bg-slate-50 dark:bg-slate-900 flex flex-col py-8 border-r border-slate-200 dark:border-slate-800 font-manrope tracking-normal text-[14px]">
 <div class="px-6 py-6 mb-4">
@@ -115,10 +115,7 @@
 <span class="material-symbols-outlined mr-4">group</span>
 <span>Patients</span>
 </a>
-<a class="flex items-center {{ request()->routeIs('doctor.inventory') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.inventory') }}">
-<span class="material-symbols-outlined mr-4">inventory_2</span>
-<span>Inventaire</span>
-</a>
+
 <a class="flex items-center {{ request()->routeIs('doctor.settings') ? 'bg-white dark:bg-slate-800 text-teal-700 dark:text-teal-400 font-bold rounded-l-full ml-4 pl-4 shadow-sm' : 'text-slate-600 dark:text-slate-400 px-8 hover:text-teal-600 hover:pl-10' }} py-3 transition-all duration-300 ease-in-out" href="{{ route('doctor.settings') }}">
 <span class="material-symbols-outlined mr-4">settings</span>
 <span>Paramètres</span>
@@ -154,7 +151,6 @@
                 $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('est_lu', false)->count();
             @endphp
             <div class="relative group">
-                <span class="material-symbols-outlined p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors">notifications</span>
                 @if($unreadCount > 0)
                     <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">{{ $unreadCount }}</span>
                 @endif

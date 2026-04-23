@@ -97,20 +97,7 @@
                 </form>
             </div>
 
-            <!-- Quick Stats Card -->
-            <div class="bg-primary/5 p-6 rounded-xl border border-primary/10 relative overflow-hidden group">
-                <div class="relative z-10">
-                    <p class="text-xs font-bold text-primary uppercase tracking-widest mb-1">Capacité Archive</p>
-                    <h4 class="text-4xl font-extrabold text-primary-container font-headline mb-4">82%</h4>
-                    <div class="w-full bg-primary-fixed h-2 rounded-full mb-3">
-                        <div class="bg-primary w-4/5 h-2 rounded-full relative">
-                            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
-                        </div>
-                    </div>
-                    <p class="text-[11px] font-medium text-primary-container/80">Base de données des patients indexée</p>
-                </div>
-                <span class="material-symbols-outlined absolute -bottom-4 -right-4 text-9xl text-primary/5 group-hover:rotate-12 transition-transform duration-700" data-icon="folder_managed">folder_managed</span>
-            </div>
+            
         </section>
 
         <!-- Patient List Section -->
@@ -176,27 +163,7 @@
                 @endif
             </div>
 
-            <!-- Information Cards for Non-Digital Patients -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-5 rounded-xl bg-secondary/5 border border-secondary/10 flex gap-4">
-                    <div class="w-12 h-12 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary shrink-0">
-                        <span class="material-symbols-outlined" data-icon="contact_phone">contact_phone</span>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-bold text-on-secondary-container mb-1">Assistance Téléphonique</h4>
-                        <p class="text-xs text-on-secondary-container/70 leading-relaxed">Priorité donnée aux rappels pour les patients sans accès numérique.</p>
-                    </div>
-                </div>
-                <div class="p-5 rounded-xl bg-tertiary/5 border border-tertiary/10 flex gap-4">
-                    <div class="w-12 h-12 rounded-full bg-tertiary-fixed/50 flex items-center justify-center text-tertiary shrink-0">
-                        <span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-bold text-on-tertiary-fixed-variant mb-1">Dossier Physique Obligatoire</h4>
-                        <p class="text-xs text-on-tertiary-fixed-variant/70 leading-relaxed">Assurez-vous que la version papier est à jour avant chaque consultation.</p>
-                    </div>
-                </div>
-            </div>
+
         </section>
     </div>
 </div>

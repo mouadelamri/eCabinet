@@ -89,27 +89,27 @@
     <div class="flex items-center gap-3 px-3 py-6 mb-4">
         <x-logo />
     </div>
-    
+
     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-200/50' }} font-semibold rounded-lg transition-all duration-300 scale-98 active:scale-95">
         <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
         <span class="font-manrope text-sm font-medium tracking-tight">Overview</span>
     </a>
-    
+
     <a href="{{ route('admin.doctors') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.doctors') ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-200/50' }} font-semibold rounded-lg transition-all duration-300 scale-98 active:scale-95">
         <span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
         <span class="font-manrope text-sm font-medium tracking-tight">Doctors</span>
     </a>
-    
+
     <a href="{{ route('admin.secretaries') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.secretaries') ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-200/50' }} font-semibold rounded-lg transition-all duration-300 scale-98 active:scale-95">
         <span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
         <span class="font-manrope text-sm font-medium tracking-tight">Secretaries</span>
     </a>
-    
+
     <a href="{{ route('admin.patients') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.patients') ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-200/50' }} font-semibold rounded-lg transition-all duration-300 scale-98 active:scale-95">
         <span class="material-symbols-outlined" data-icon="group">group</span>
         <span class="font-manrope text-sm font-medium tracking-tight">Patients</span>
     </a>
-    
+
     <div class="mt-auto">
         <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.settings') ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300' : 'text-slate-500 hover:text-teal-600 hover:bg-slate-200/50' }} font-semibold rounded-lg transition-all duration-300 scale-98 active:scale-95">
             <span class="material-symbols-outlined" data-icon="settings">settings</span>
@@ -126,30 +126,30 @@
 </nav>
 
 <!-- Top Navigation Bar -->
-<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md flex items-center justify-between px-8 z-40">
-    <div class="flex items-center gap-4 bg-surface-container-high rounded-full px-4 py-2 w-96 focus-within:ring-2 focus-within:ring-teal-500/20 transition-all">
-        <span class="material-symbols-outlined text-outline" data-icon="search">search</span>
-        <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline/60" placeholder="Search..." type="text"/>
-    </div>
-    
-    <div class="flex items-center gap-6">
-        <button class="relative p-2 text-slate-400 hover:text-teal-500 transition-colors">
-            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-            <span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-white"></span>
-        </button>
-        <button class="p-2 text-slate-400 hover:text-teal-500 transition-colors">
-            <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
-        </button>
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md flex items-center px-8 z-40">
+    <div class="ml-auto flex items-center gap-6">
+
+        <!-- Divider -->
         <div class="h-8 w-[1px] bg-outline-variant/30"></div>
+
+        <!-- User -->
         <div class="flex items-center gap-3">
+            
             <div class="text-right">
-                <p class="text-xs font-bold text-on-surface">{{ auth()->user()->name ?? 'Dr. Admin' }}</p>
-                <p class="text-[10px] text-on-surface-variant font-medium">Administrator</p>
+                <p class="text-xs font-bold text-on-surface dark:text-white">
+                    {{ auth()->user()->name ?? 'Dr. Admin' }}
+                </p>
+                <p class="text-[10px] text-on-surface-variant dark:text-slate-400 font-medium">
+                    Administrator
+                </p>
             </div>
+
             <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold border-2 border-primary/10">
                 {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
             </div>
+
         </div>
+
     </div>
 </header>
 

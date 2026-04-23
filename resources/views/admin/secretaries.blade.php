@@ -59,30 +59,7 @@
                 </form>
             </div>
 
-            <!-- Statistics / Inventory -->
-            <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Charge de travail actuelle</h4>
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex justify-between text-xs mb-1.5">
-                            <span class="font-medium">Rendez-vous planifiés</span>
-                            <span class="text-primary font-bold">88%</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-primary-fixed rounded-full overflow-hidden">
-                            <div class="h-full bg-primary" style="width: 88%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-xs mb-1.5">
-                            <span class="font-medium">Dossiers à traiter</span>
-                            <span class="text-tertiary font-bold">42%</span>
-                        </div>
-                        <div class="h-1.5 w-full bg-tertiary-fixed rounded-full overflow-hidden">
-                            <div class="h-full bg-tertiary" style="width: 42%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </section>
 
         <!-- List View -->

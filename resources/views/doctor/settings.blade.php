@@ -16,7 +16,7 @@
                 <span class="material-symbols-outlined text-primary">palette</span>
                 Apparence & Thème
             </h3>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Light Mode Card -->
                 <button onclick="updateTheme('light')" class="appearance-card p-4 rounded-2xl border-2 transition-all text-left flex items-start gap-4 {{ $user->appearance_mode == 'light' ? 'border-primary bg-primary/5' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300' }}">
@@ -56,18 +56,7 @@
             </h3>
 
             <div class="space-y-4">
-                <div class="flex items-center justify-between p-4 bg-surface-container-low dark:bg-slate-800 rounded-2xl">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
-                            <span class="material-symbols-outlined">download</span>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-on-surface dark:text-white">Sauvegarde Locale</p>
-                            <p class="text-[11px] text-on-surface-variant dark:text-slate-400">Gérez vos préférences d'exportation de données.</p>
-                        </div>
-                    </div>
-                    <button class="px-4 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">Gérer</button>
-                </div>
+
 
                 <div class="flex items-center justify-between p-4 bg-surface-container-low dark:bg-slate-800 rounded-2xl">
                     <div class="flex items-center gap-4">
@@ -97,7 +86,7 @@ async function updateTheme(mode) {
             },
             body: JSON.stringify({ appearance_mode: mode })
         });
-        
+
         if (response.ok) {
             // Update document class immediately
             document.documentElement.className = mode;
