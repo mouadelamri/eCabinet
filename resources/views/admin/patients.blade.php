@@ -20,13 +20,9 @@
         {{ session('success') }}
     </div>
     @endif
-    @if($errors->any())
+    @if(session('error'))
     <div class="px-6 py-4 bg-red-100 text-red-800 rounded-xl font-medium">
-        <ul>
-            @foreach($errors->all() as $err)
-            <li>• {{ $err }}</li>
-            @endforeach
-        </ul>
+        {{ session('error') }}
     </div>
     @endif
 
@@ -97,7 +93,7 @@
                 </form>
             </div>
 
-            
+
         </section>
 
         <!-- Patient List Section -->

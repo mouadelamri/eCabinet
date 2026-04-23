@@ -108,7 +108,10 @@ class AdminController extends Controller
         if ($user->role === 'ADMIN' || $user->id === auth()->id()) {
             return back()->with('error', 'Action non autorisée : les administrateurs ne peuvent pas être supprimés via cette interface.');
         }
-
+        $test = RendezVous::where('patient_id', $user->id)->orWhere('medecin_id', $user->id)->exists();
+        if ($test) {
+            return back()->with('error', 'Impossible de supprimer cet utilisateur : il a des rendez-vous associés.');
+        }
         $user->delete();
         return back()->with('success', 'Utilisateur supprimé avec succès.');
     }

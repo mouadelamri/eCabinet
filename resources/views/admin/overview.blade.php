@@ -3,11 +3,22 @@
 @section('title', 'Admin - Overview')
 
 @section('content')
+    @if(session('success'))
+    <div class="px-6 py-4 bg-green-100 text-green-800 rounded-xl font-medium">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="px-6 py-4 bg-red-100 text-red-800 rounded-xl font-medium">
+        {{ session('error') }}
+    </div>
+    @endif  
 <!-- Dashboard Header -->
 <div class="mb-10">
 <h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Tableau de Bord Global</h2>
 <p class="text-on-surface-variant font-medium mt-1">Real-time overview of clinical performance and patient traffic.</p>
 </div>
+
 <!-- Bento Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 <!-- Doctors Stat -->
@@ -151,7 +162,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('appointmentsChart').getContext('2d');
         const chartData = @json($last7Days);
-        
+
         const labels = chartData.map(item => item.label);
         const appointmentsData = chartData.map(item => item.count);
         const registrationsData = chartData.map(item => item.registrations);
@@ -236,12 +247,12 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
+                plugins: {
+                    legend: {
                         display: true,
                         position: 'top',
                         labels: { usePointStyle: true, boxWidth: 8 }
-                    } 
+                    }
                 },
                 scales: {
                     y: {
@@ -264,7 +275,7 @@
         const doctorsCount = {{ $doctorsCount }};
         const patientsCount = {{ $patientsCount }};
         const secretariesCount = {{ $secretariesCount }};
-        
+
         new Chart(userCtx, {
             type: 'doughnut',
             data: {
