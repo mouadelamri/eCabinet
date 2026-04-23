@@ -74,6 +74,7 @@
             </div>
 
             <div class="mt-6 flex gap-3">
+                @if($nextRdv->statut === 'PENDING')
                 <form action="{{ route('patient.appointments.cancel', $nextRdv) }}" method="POST" class="w-full">
                     @csrf
 
@@ -83,6 +84,7 @@
                         Annuler
                     </button>
                 </form>
+                @endif
             </div>
         @else
             <div class="p-4 bg-surface-container-low rounded-xl text-center py-8">
@@ -94,37 +96,78 @@
         @endif
     </div>
 
-    <!-- Notifications Area -->
-    <div class="md:col-span-5 bg-surface-container-low rounded-xl p-6 flex flex-col">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-headline font-bold text-on-surface">Notifications</h3>
-            <button class="text-xs font-bold text-primary">Tout marquer comme lu</button>
-        </div>
-        <div class="space-y-3 flex-1 overflow-y-auto">
-            @forelse($recentNotifications as $notif)
-                @php
-                    $icon = 'info';
-                    $color = 'tertiary';
-                    if($notif->type === 'CONFIRMATION') { $icon = 'check_circle'; $color = 'primary'; }
-                    if($notif->type === 'REMINDER') { $icon = 'notification_important'; $color = 'secondary'; }
-                    if($notif->type === 'ALERTE') { $icon = 'warning'; $color = 'error'; }
-                @endphp
-                <div class="p-3 bg-surface-container-lowest rounded-lg border-l-4 border-{{ $color }} flex gap-3 {{ $notif->est_lu ? 'opacity-60' : '' }}">
-                    <span class="material-symbols-outlined text-{{ $color }} text-xl" data-icon="{{ $icon }}">{{ $icon }}</span>
-                    <div>
-                        <p class="text-sm font-bold">{{ $notif->type }}</p>
-                        <p class="text-xs text-on-surface-variant">{{ $notif->message }}</p>
-                        <p class="text-[10px] text-outline mt-1 italic">{{ \Carbon\Carbon::parse($notif->sent_at)->diffForHumans() }}</p>
-                    </div>
-                </div>
-            @empty
-                <div class="flex flex-col items-center justify-center py-10 opacity-40">
-                    <span class="material-symbols-outlined text-4xl mb-2" data-icon="notifications_off">notifications_off</span>
-                    <p class="text-xs font-bold uppercase tracking-widest">Aucune notification</p>
-                </div>
-            @endforelse
-        </div>
+  <!-- Notifications Area -->
+<div class="md:col-span-5 bg-surface-container-low rounded-xl p-6 flex flex-col h-[500px] overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-4 shrink-0">
+        <h3 class="font-headline font-bold text-on-surface">Notifications</h3>
+        <form action="{{ route('patient.markAllAsRead') }}" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <button type="submit" class="text-xs font-bold text-primary">
+                Tout marquer comme lu
+            </button>
+        </form>
+
     </div>
+
+    <!-- Scroll Area -->
+    <div class="space-y-3 flex-1 overflow-y-auto pr-2">
+
+        @forelse($recentNotifications as $notif)
+
+            @php
+                $icon = 'info';
+                $color = 'tertiary';
+
+                if($notif->type === 'CONFIRMATION') {
+                    $icon = 'check_circle';
+                    $color = 'primary';
+                }
+
+                elseif($notif->type === 'ANNULATION'
+                    || str_contains(strtolower($notif->message), 'annulé')
+                    || str_contains(strtolower($notif->message), 'annuler')) {
+                    $icon = 'cancel';
+                    $color = 'error';
+                }
+            @endphp
+
+            <div class="p-3 bg-surface-container-lowest rounded-lg border-l-4 border-{{ $color }} flex gap-3 {{ $notif->est_lu ? 'opacity-60' : '' }}">
+
+                <span class="material-symbols-outlined text-{{ $color }} text-xl shrink-0">
+                    {{ $icon }}
+                </span>
+
+                <div class="min-w-0">
+                    <p class="text-sm font-bold">{{ $notif->type }}</p>
+                    <p class="text-xs text-on-surface-variant break-words">
+                        {{ $notif->message }}
+                    </p>
+                    <p class="text-[10px] text-outline mt-1 italic">
+                        {{ \Carbon\Carbon::parse($notif->sent_at)->diffForHumans() }}
+                    </p>
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="flex flex-col items-center justify-center py-10 opacity-40 h-full">
+                <span class="material-symbols-outlined text-4xl mb-2">
+                    notifications_off
+                </span>
+                <p class="text-xs font-bold uppercase tracking-widest">
+                    Aucune notification
+                </p>
+            </div>
+
+        @endforelse
+
+    </div>
+</div>
 
     <!-- Historique Rapide -->
     <div class="md:col-span-12 bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/10">

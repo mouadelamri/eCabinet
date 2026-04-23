@@ -18,7 +18,6 @@ class RendezVousController extends Controller
     {
         $rdv = RendezVous::where('id', $id)->firstOrFail();
 
-<<<<<<< HEAD
         if ($rdv->statut === 'PENDING' ) {
             $rdv->update(['statut' => 'CONFIRMED']);
 
@@ -34,7 +33,7 @@ class RendezVousController extends Controller
                 Notification::create([
                     'user_id' => $rdv->patient_id,
                     'type' => 'CONFIRMATION',
-                    'message' => "Votre rendez-vous avec le Dr. " . $rdv->medecin_id->name . " pour le " . \Carbon\Carbon::parse($rdv->date_heure)->translatedFormat('d F') . " a été confirmé.",
+                    'message' => "Votre rendez-vous avec le Dr. " . $rdv->medecin->name . " pour le " . \Carbon\Carbon::parse($rdv->date_heure)->translatedFormat('d F') . " a été confirmé.",
                     'est_lu' => false,
                     'sent_at' => now(),
                 ]);
@@ -51,25 +50,13 @@ class RendezVousController extends Controller
         }
 
         return back()->with('error', 'Impossible de confirmer ce rendez-vous.');
-=======
-        $rendezVous->update([
-            'statut' => 'CONFIRMED'
-        ]);
-        try {
-            Mail::to($rendezVous->patient->email)->send(new AppointmentConfirmed($rendezVous));
-        } catch (\Exception $e) {
-            // Log the error or handle it as needed
-            \Log::error('Failed to send appointment confirmation email: ' . $e->getMessage());
-        }
-        
-        return back()->with('success', 'Rendez-vous confirmé et email envoyé !');
->>>>>>> dc174713e3e71541fff0f47b8c95220754f9ef05
+
     }
 
     public function annuler($id)
     {
         $rendezVous = RendezVous::findOrFail($id);
-        if($rendezVous->statut == 'CONFIRMED' || $rendezVous->statut !== 'CANCELLED' ){
+        if($rendezVous->statut == 'CONFIRMED' ){
             return back()->with('error' , 'Impossible d\'annuler ce rendez-vous.');
         }else{
         $rendezVous->update([
@@ -77,8 +64,8 @@ class RendezVousController extends Controller
         ]);
         UserActivity::create([
                 'user_id' => Auth::id(),
-                'type' => 'APPOINTMENT_ANNULEE',
-                'description' => "Rendez-vous annuller pour le patient " . ($rendezVous->patient_id->name ?? 'inconnu'),
+                'type' => 'ANNULATION',
+                'description' => "Rendez-vous annuller pour le patient " . ($rendezVous->patient->name ?? 'inconnu'),
             ]);
 
             // Create In-App Notification for Patient
@@ -86,7 +73,7 @@ class RendezVousController extends Controller
                 Notification::create([
                     'user_id' => $rendezVous->patient_id,
                     'type' => 'ANNULATION',
-                    'message' => "Votre rendez-vous avec le Dr. " . $rendezVous->medecin_id->name . " pour le " . \Carbon\Carbon::parse($rendezVous->date_heure)->translatedFormat('d F') . " a été annuller.",
+                    'message' => "Votre rendez-vous avec le Dr. " . $rendezVous->medecin->name . " pour le " . \Carbon\Carbon::parse($rendezVous->date_heure)->translatedFormat('d F') . " a été annuller.",
                     'est_lu' => false,
                     'sent_at' => now(),
                 ]);
@@ -95,9 +82,28 @@ class RendezVousController extends Controller
             }
         return back()->with('success' , 'rendez vous annuler');
         }
-        
+    }
 
+
+    public function destroy($id)
+    {
+    $rendezVous = RendezVous::findOrFail($id);
+
+    // Optional safety check (avoid deleting confirmed appointments)
+    if ($rendezVous->statut === 'CONFIRMED') {
+        return back()->with('error', 'Impossible de supprimer un rendez-vous confirmé.');
+    }
+
+    // Log activity
+    UserActivity::create([
+        'user_id' => Auth::id(),
+        'type' => 'APPOINTMENT_DELETED',
+        'description' => "Rendez-vous supprimé pour le patient " . ($rendezVous->patient->name ?? 'inconnu'),
+    ]);
+    // Delete RDV
+    $rendezVous->delete();
+
+    return back()->with('success', 'Rendez-vous supprimé avec succès.');
     }
 }
 ?>
-

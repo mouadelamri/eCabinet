@@ -74,14 +74,7 @@ use App\Models\User;
                                 <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end gap-2">
 
-
-                                    @if ($rv->statut === 'CONFIRMED' || $rv->statut === 'CANCELLED')
-
-                                    <span class="material-symbols-outlined text-sm"></span>
-
-                                    @else
-
-                                    <form action="{{ route('secretary.cancel', $rv) }}" method="POST">
+                                   <form action="{{ route('secretary.cancel', $rv) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
 
@@ -99,7 +92,7 @@ use App\Models\User;
                                             <span class="material-symbols-outlined text-sm">check</span>
                                         </button>
                                     </form>
-                                    @endif
+                                    
 
                                 </div>
                             </td>

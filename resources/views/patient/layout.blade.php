@@ -94,40 +94,40 @@
 <body class="bg-background text-on-surface">
 
 <div class="flex min-h-screen">
-    
+
     <!-- SideNavBar -->
     <aside class="hidden md:flex flex-col h-screen w-64 bg-slate-50 dark:bg-slate-950 p-4 space-y-2 sticky top-0 border-r-0">
         <div class="mb-8 px-2">
             <h1 class="text-2xl font-black text-teal-700 dark:text-teal-500 font-headline">eCabinet</h1>
             <p class="text-xs font-medium text-slate-500 font-headline uppercase tracking-widest">Portail Patient</p>
         </div>
-        
+
         <nav class="space-y-1">
-            <a href="{{ route('patient.dashboard') }}" 
+            <a href="{{ route('patient.dashboard') }}"
                class="flex items-center space-x-3 px-4 py-3 shadow-sm rounded-lg font-headline font-medium transition-transform duration-200 {{ request()->routeIs('patient.dashboard') ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400' : 'text-slate-600 dark:text-slate-400 hover:text-teal-500 hover:translate-x-1' }}">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span>Tableau de bord</span>
             </a>
-            
-            <a href="{{ route('patient.appointments') }}" 
+
+            <a href="{{ route('patient.appointments') }}"
                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-headline font-medium transition-transform duration-200 {{ request()->routeIs('patient.appointments*') ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-teal-500 hover:translate-x-1' }}">
                 <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
                 <span>Mes Rendez-vous</span>
             </a>
-            
-            <a href="{{ route('patient.dossier') }}" 
+
+            <a href="{{ route('patient.dossier') }}"
                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-headline font-medium transition-transform duration-200 {{ request()->routeIs('patient.dossier') ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-teal-500 hover:translate-x-1' }}">
                 <span class="material-symbols-outlined" data-icon="folder_shared">folder_shared</span>
                 <span>Dossier Médical</span>
             </a>
-            
-            <a href="{{ route('patient.settings') }}" 
+
+            <a href="{{ route('patient.settings') }}"
                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-headline font-medium transition-transform duration-200 {{ request()->routeIs('patient.settings') ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-teal-500 hover:translate-x-1' }}">
                 <span class="material-symbols-outlined" data-icon="settings">settings</span>
                 <span>Paramètres</span>
             </a>
         </nav>
-        
+
         <div class="mt-auto p-4 bg-surface-container rounded-xl">
             <div class="flex items-center space-x-3">
                 <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-10 h-10 rounded-full object-cover">
@@ -136,7 +136,7 @@
                     <p class="text-xs text-on-surface-variant truncate">Patient</p>
                 </div>
             </div>
-            
+
             <form method="POST" action="{{ route('logout') }}" class="mt-4">
                 @csrf
                 <button type="submit" class="w-full flex items-center justify-center space-x-2 text-xs font-bold text-error hover:underline">
@@ -149,31 +149,50 @@
 
     <!-- Main Content -->
     <main class="flex-1 min-w-0">
-        
+
         <!-- TopNavBar -->
-        <header class="flex justify-between items-center px-6 py-3 w-full sticky top-0 z-50 glass-header shadow-sm shadow-teal-900/5">
-            <div class="flex items-center md:hidden">
-                <h1 class="text-xl font-bold text-teal-700 font-headline">eCabinet</h1>
-            </div>
 
-            <div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-1.5 w-96">
-                <span class="material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline-variant font-body" placeholder="Rechercher un document, un médecin..." type="text"/>
-            </div>
+            <header class="flex items-center px-6 py-3 w-full sticky top-0 z-50 glass-header shadow-sm shadow-teal-900/5">
 
-            <div class="flex items-center space-x-4">
-                @php
-                    $unreadCount = \App\Models\Notification::where('user_id', Auth::id())->where('est_lu', false)->count();
-                @endphp
-                <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative group">
-                    <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-                    @if($unreadCount > 0)
-                        <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">{{ $unreadCount }}</span>
-                    @endif
-                </button>
-                <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover shadow-sm">
-            </div>
-        </header>
+                <!-- Logo (LEFT) -->
+                <div class="flex items-center md:hidden">
+                    <h1 class="text-xl font-bold text-teal-700 font-headline">
+                        eCabinet
+                    </h1>
+                </div>
+
+                <!-- RIGHT : Notification + Profile Photo -->
+                <div class="ml-auto flex items-center space-x-4">
+
+                    @php
+                        $unreadCount = \App\Models\Notification::where('user_id', Auth::id())
+                            ->where('est_lu', false)
+                            ->count();
+                    @endphp
+
+                    <!-- Notification -->
+                    <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
+                        <span class="material-symbols-outlined">
+                            notifications
+                        </span>
+
+                        @if($unreadCount > 0)
+                            <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
+                    </button>
+
+                    <!-- Profile Photo -->
+                    <img
+                        src="{{ auth()->user()->profile_photo_url }}"
+                        alt="{{ auth()->user()->name }}"
+                        class="w-8 h-8 rounded-full object-cover shadow-sm"
+                    >
+
+                </div>
+
+            </header>
 
         <div class="p-6 lg:p-10 space-y-8 max-w-7xl mx-auto">
             @if(session('success'))

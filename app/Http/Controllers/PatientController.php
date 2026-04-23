@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AppointmentRequested;
+use App\Models\Notification;
 
 class PatientController extends Controller
 {
@@ -23,6 +24,7 @@ class PatientController extends Controller
     {
         $user = Auth::user();
         $upcomingAppointments = RendezVous::where('patient_id', $user->id)
+             ->where('date_heure', '>=', now())
             ->whereIn('statut', ['PENDING', 'CONFIRMED'])
             ->orderBy('date_heure', 'asc')
             ->take(3)
@@ -33,7 +35,7 @@ class PatientController extends Controller
             ->take(5)
             ->get();
 
-        $recentNotifications = \App\Models\Notification::where('user_id', $user->id)
+        $recentNotifications = Notification::where('user_id', $user->id)
             ->latest()
             ->take(5)
             ->get();
@@ -133,7 +135,7 @@ class PatientController extends Controller
 
         // Send Notification Email
         try {
-            Mail::to(Auth::user()->email)->send(new AppointmentRequested($appointment));
+            Mail::to(Auth::user()->email)->queue(new AppointmentRequested($appointment));
         } catch (\Exception $e) {
             // Silently fail or log for now to not block the user
             \Log::error("Failed to send appointment request email: " . $e->getMessage());
@@ -269,8 +271,6 @@ class PatientController extends Controller
         }
     }
 
-    public function viewMyProgress()
-    {
-        //
-    }
+ //
+
 }

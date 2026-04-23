@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RendezVousController;
 use App\Http\Controllers\SecretaireController;
 
@@ -45,10 +46,12 @@ Route::middleware(['auth', 'checkAdmin'])->prefix('admin')->name('admin.')->grou
 // Patient Portal Routes
 Route::middleware(['auth'])->prefix('patient')->name('patient.')->group(function () {
     Route::get('/', [PatientController::class, 'dashboard'])->name('dashboard');
+    Route::patch('/markAllAsRead' , [NotificationController::class ,'markAllAsRead' ])->name('markAllAsRead');
     Route::get('/rendezvous', [PatientController::class, 'appointments'])->name('appointments');
     Route::get('/rendezvous/nouveau', [PatientController::class, 'bookAppointment'])->name('appointments.create');
     Route::post('/rendezvous', [PatientController::class, 'requestAppointment'])->name('appointments.store');
     Route::post('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler'])->name('appointments.cancel');
+    Route::delete('/rendezvous/{id}', [RendezVousController::class, 'destroy'])->name('appointments.destroy');
     Route::get('/dossier', [PatientController::class, 'medicalRecord'])->name('dossier');
     Route::get('/parametres', [PatientController::class, 'settings'])->name('settings');
     Route::patch('/parametres', [PatientController::class, 'updateSettings'])->name('settings.update');
@@ -66,6 +69,7 @@ Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(func
     Route::get('/rendezVousAnnulee' , [SecretaireController::class , 'CancelledrendezVous'])->name('CancelledrendezVous');
     Route::patch('/rendezvous/{rv}/confirm', [RendezVousController::class, 'confirmAppointment'])->name('confirm');
     Route::patch('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler'])->name('cancel');
+    Route::delete('/rendezvous/{id}', [RendezVousController::class, 'destroy'])->name('destroy');
 
 
 });

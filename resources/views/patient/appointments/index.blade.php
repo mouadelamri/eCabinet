@@ -3,25 +3,14 @@
 @section('title', 'Mes Rendez-vous — eCabinet')
 
 @section('content')
-@if(session('success'))
-    <div class="mb-6 p-4 rounded-xl bg-teal-50 text-teal-800 border border-teal-200 flex items-center gap-3 shadow-sm">
-        <span class="material-symbols-outlined">check_circle</span>
-        <p class="font-medium text-sm">{{ session('success') }}</p>
-    </div>
-@endif
-@if(session('error'))
-    <div class="mb-6 p-4 rounded-xl bg-red-50 text-red-800 border border-red-200 flex items-center gap-3 shadow-sm">
-        <span class="material-symbols-outlined">error</span>
-        <p class="font-medium text-sm">{{ session('error') }}</p>
-    </div>
-@endif
+
 <!-- Page Header & Filters -->
 <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
     <div>
         <h2 class="text-4xl font-extrabold text-on-surface font-headline tracking-tight mb-2">Mes Rendez-vous</h2>
         <p class="text-on-surface-variant max-w-lg">Gérez vos consultations médicales et suivez l'historique de vos visites au cabinet.</p>
     </div>
-    
+
     <div class="flex p-1 bg-surface-container-high rounded-xl w-fit">
         <a href="{{ route('patient.appointments') }}" class="px-6 py-2 text-sm {{ request('filter') == '' ? 'font-semibold bg-white shadow-sm text-primary' : 'font-medium text-on-surface-variant hover:text-on-surface' }} rounded-lg transition-all">Tous</a>
         <a href="{{ route('patient.appointments', ['filter' => 'upcoming']) }}" class="px-6 py-2 text-sm {{ request('filter') == 'upcoming' ? 'font-semibold bg-white shadow-sm text-primary' : 'font-medium text-on-surface-variant hover:text-on-surface' }} rounded-lg transition-all">À venir</a>
@@ -130,8 +119,13 @@
                     </td>
                     <td class="px-6 py-6 text-right">
                         <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="px-4 py-2 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">Détails</button>
-                            @if(in_array($rdv->statut, ['PENDING', 'CONFIRMED']))
+                            @if($rdv->statut !== 'CONFIRMED' )
+                                <form action="{{ route('patient.appointments.destroy', $rdv->id) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce rendez-vous ?');">
+                                    @csrf
+                                    @method('DELETE')
+                                <button type="submit" class="px-4 py-2 text-sm font-bold text-error border border-error/20 hover:bg-error/5 rounded-lg transition-colors">supprimer</button>
+                                </form>
+                            @elseif($rdv->statut == 'PENDING' )
                                 <form action="{{ route('patient.appointments.cancel', $rdv->id) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce rendez-vous ?');">
                                     @csrf
                                     <button type="submit" class="px-4 py-2 text-sm font-bold text-error border border-error/20 hover:bg-error/5 rounded-lg transition-colors">Annuler</button>
@@ -150,7 +144,7 @@
             </tbody>
         </table>
     </div>
-    
+
     <!-- Table Footer / Pagination -->
     @if($appointments->hasPages())
     <div class="px-6 py-4 bg-surface-container-high/30">

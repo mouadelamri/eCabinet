@@ -10,10 +10,10 @@
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8">
-    
+
     <!-- Visualisation du Progrès Section & Consultations -->
     <div class="lg:col-span-8 space-y-6">
-        
+
         <!-- Profil Santé Section -->
         <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/10">
             <div class="flex items-center justify-between mb-6">
@@ -50,7 +50,7 @@
                 @endif
             </div>
         </div>
-        
+
         <div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm border border-outline-variant/10">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-3">
@@ -83,7 +83,7 @@
                             $tensionData = $consultations->whereNotNull('tension')->take(6)->reverse();
                             $hasTension = $tensionData->isNotEmpty();
                         @endphp
-                        
+
                         @if($hasTension)
                             @foreach($tensionData as $item)
                                 @php
@@ -123,7 +123,7 @@
                             $poidsData = $consultations->whereNotNull('poids')->take(5)->reverse();
                             $hasPoids = $poidsData->count() >= 2;
                         @endphp
-                        
+
                         @if($hasPoids)
                             <svg class="w-full h-full overflow-visible" viewBox="0 0 400 100">
                                 @php
@@ -165,7 +165,7 @@
                 </div>
                 <h3 class="font-headline text-lg font-bold">Historique des Consultations</h3>
             </div>
-            
+
             <div class="relative space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant/30">
                 @forelse($consultations as $consultation)
                 <div class="relative pl-10">
@@ -181,7 +181,7 @@
                         <p class="text-sm text-on-surface-variant leading-relaxed mb-4">
                             "{!! nl2br(e($consultation->compte_rendu)) !!}"
                         </p>
-                        
+
                         @if($consultation->ordonnance)
                             <div class="bg-surface-container-low/60 p-5 rounded-xl border border-dashed border-outline-variant/30 mt-4">
                                 <div class="flex justify-between items-start mb-2">
@@ -219,7 +219,7 @@
                 </div>
                 <h3 class="font-headline text-lg font-bold">Documents & Ordonnances</h3>
             </div>
-            
+
             <div class="space-y-3">
                 @php $docCount = 0; @endphp
                 @foreach($consultations as $consultation)
@@ -241,7 +241,7 @@
                         </div>
                     @endif
                 @endforeach
-                
+
                 @if($docCount == 0)
                     <div class="text-center py-4 text-sm text-on-surface-variant">
                         Aucun document disponible.
@@ -249,26 +249,10 @@
                 @endif
             </div>
 
-            <button class="mt-6 w-full py-3 bg-secondary-container/10 text-secondary font-bold text-sm rounded-xl hover:bg-secondary-container/20 transition-colors flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-sm">cloud_upload</span>
-                Ajouter un document
-            </button>
+
         </div>
 
-        <!-- Health Tips / Bento Card -->
-        <div class="relative overflow-hidden rounded-xl p-6 text-white min-h-[200px] flex flex-col justify-end">
-            <div class="absolute inset-0 z-0">
-                <div class="absolute inset-0 bg-gradient-to-t from-teal-900/90 via-teal-900/40 to-transparent"></div>
-                <div class="w-full h-full bg-teal-800"></div>
-            </div>
-            <div class="relative z-10">
-                <h4 class="font-headline font-bold text-lg mb-1">Besoin d'aide ?</h4>
-                <p class="text-xs text-primary-fixed mb-4">Contactez votre équipe médicale directement via la messagerie sécurisée.</p>
-                <button class="bg-white text-teal-900 px-4 py-2 rounded-lg text-xs font-bold shadow-lg hover:scale-105 active:scale-95 transition-transform">
-                    Envoyer un message
-                </button>
-            </div>
-        </div>
+        
     </div>
 </div>
 @endsection

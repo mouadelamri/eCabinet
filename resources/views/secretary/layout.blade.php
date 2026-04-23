@@ -112,7 +112,7 @@
             <a href="{{ route('secretary.patients') }}"
                class="flex items-center space-x-3 px-4 py-3 rounded-lg font-headline font-medium transition-transform duration-200 {{ request()->routeIs('patient.appointments*') ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-teal-500 hover:translate-x-1' }}">
                 <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
-                <span>liste des Patients</span>
+                <span>Patients</span>
             </a>
 
             <a href="{{ route('secretary.PendingrendezVous') }}"
@@ -162,27 +162,30 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 min-w-0">
+<main class="flex-1 min-w-0">
 
-        <!-- TopNavBar -->
-        <header class="flex justify-between items-center px-6 py-3 w-full sticky top-0 z-50 glass-header shadow-sm shadow-teal-900/5">
-            <div class="flex items-center md:hidden">
-                <h1 class="text-xl font-bold text-teal-700 font-headline">eCabinet</h1>
-            </div>
+    <!-- TopNavBar -->
+    <header class="flex items-center justify-between px-6 py-3 w-full sticky top-0 z-50 glass-header shadow-sm shadow-teal-900/5">
 
-            <div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-1.5 w-96">
-                <span class="material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
-                <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-outline-variant font-body" placeholder="Rechercher un document, un médecin..." type="text"/>
-            </div>
+        <!-- Left -->
+        <div class="flex items-center md:hidden">
+            <h1 class="text-xl font-bold text-teal-700 font-headline">
+                eCabinet
+            </h1>
+        </div>
 
-            <div class="flex items-center space-x-4">
-                <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
-                    <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-                </button>
-                <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover shadow-sm">
-            </div>
-        </header>
+        <!-- Right -->
+        <div class="ml-auto flex items-center space-x-4">
 
+            <img
+                src="{{ auth()->user()->profile_photo_url }}"
+                alt="{{ auth()->user()->name }}"
+                class="w-8 h-8 rounded-full object-cover shadow-sm"
+            >
+
+        </div>
+
+    </header>
         <div class="p-6 lg:p-10 space-y-8 max-w-7xl mx-auto">
             @if(session('success'))
             <div class="bg-surface-container p-4 rounded-xl shadow-sm border-l-4 border-primary flex items-center gap-3">
@@ -202,28 +205,7 @@
         </div>
     </main>
 
-    <!-- Mobile Bottom NavBar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 glass-header flex justify-around items-center p-3 z-50 border-t-0 shadow-lg">
-        <a href="{{ route('patient.dashboard') }}" class="flex flex-col items-center {{ request()->routeIs('patient.dashboard') ? 'text-teal-600' : 'text-slate-500' }} font-bold">
-            <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-            <span class="text-[10px] mt-1">Tableau</span>
-        </a>
-        <a href="{{ route('patient.appointments') }}" class="flex flex-col items-center {{ request()->routeIs('patient.appointments') ? 'text-teal-600' : 'text-slate-500' }}">
-            <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
-            <span class="text-[10px] mt-1">RDV</span>
-        </a>
-        <a href="{{ route('patient.appointments.create') }}" class="-mt-8 bg-primary hover:bg-primary/90 rounded-full p-3 shadow-lg shadow-primary/40 text-on-primary">
-            <span class="material-symbols-outlined" data-icon="add">add</span>
-        </a>
-        <a href="{{ route('patient.dossier') }}" class="flex flex-col items-center {{ request()->routeIs('patient.dossier') ? 'text-teal-600' : 'text-slate-500' }}">
-            <span class="material-symbols-outlined" data-icon="folder_shared">folder_shared</span>
-            <span class="text-[10px] mt-1">Dossier</span>
-        </a>
-        <a href="{{ route('patient.settings') }}" class="flex flex-col items-center {{ request()->routeIs('patient.settings') ? 'text-teal-600' : 'text-slate-500' }}">
-            <span class="material-symbols-outlined" data-icon="settings">settings</span>
-            <span class="text-[10px] mt-1">Param.</span>
-        </a>
-    </nav>
+
 </div>
 
 @yield('scripts')
