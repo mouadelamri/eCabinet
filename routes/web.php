@@ -59,10 +59,11 @@ Route::middleware(['auth'])->prefix('patient')->name('patient.')->group(function
     Route::get('/ordonnance/{id}/download', [PatientController::class, 'downloadOrdonnance'])->name('ordonnance.download');
 });
 //secretary portal routes
+//secretary portal routes
 Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(function () {
     Route::get('/dashboard' , [SecretaireController::class , 'dashboard'])->name('dashboard');
     Route::get('/parametres' , [SecretaireController::class , 'settigns'])->name('parametres');
-    Route::patch('/parametres', [SecretaireController::class, 'updateSettings'])->name('parametres');
+    Route::patch('/parametres', [SecretaireController::class, 'updateSettings'])->name('parametres.update'); 
     Route::get('/patients' , [SecretaireController::class , 'patients'])->name('patients');
     Route::get('/PendingrendezVous' , [SecretaireController::class , 'PendingrendezVous'])->name('PendingrendezVous');
     Route::get('/ConfirmedrendezVous' , [SecretaireController::class , 'ConfirmedrendezVous'])->name('ConfirmedrendezVous');
@@ -70,10 +71,7 @@ Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(func
     Route::patch('/rendezvous/{rv}/confirm', [RendezVousController::class, 'confirmAppointment'])->name('confirm');
     Route::patch('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler'])->name('cancel');
     Route::delete('/rendezvous/{id}', [RendezVousController::class, 'destroy'])->name('destroy');
-
-
 });
-
 
 // Doctor Portal Routes
 use App\Http\Controllers\DoctorController;
