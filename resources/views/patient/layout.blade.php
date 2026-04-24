@@ -5,6 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>@yield('title', 'eCabinet - Espace Patient')</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script id="tailwind-config">
@@ -171,17 +172,56 @@
                     @endphp
 
                     <!-- Notification -->
-                    <button class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
-                        <span class="material-symbols-outlined">
-                            notifications
-                        </span>
-
-                        @if($unreadCount > 0)
-                            <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">
-                                {{ $unreadCount }}
+                    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                        <button @click="open = !open" class="p-2 text-slate-500 hover:bg-slate-100/50 transition-colors rounded-full relative">
+                            <span class="material-symbols-outlined">
+                                notifications
                             </span>
-                        @endif
-                    </button>
+
+                            @if($unreadCount > 0)
+                                <span class="absolute top-2 right-2 w-4 h-4 bg-error text-white text-[10px] flex items-center justify-center rounded-full animate-pulse">
+                                    {{ $unreadCount }}
+                                </span>
+                            @endif
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div x-show="open" 
+                             x-transition.opacity
+                             style="display: none;"
+                             class="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 z-50 overflow-hidden">
+                            <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800">
+                                <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">Notifications</h3>
+                                @if($unreadCount > 0)
+                                    <span class="text-[10px] bg-primary/10 text-primary px-2 py-1 rounded-full font-bold">{{ $unreadCount }} non lu(s)</span>
+                                @endif
+                            </div>
+                            
+                            <div class="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/50">
+                                @php
+                                    $notificationsList = \App\Models\Notification::where('user_id', Auth::id())
+                                        ->orderBy('created_at', 'desc')
+                                        ->take(5)
+                                        ->get();
+                                @endphp
+                                @forelse($notificationsList as $notif)
+                                    <div class="p-4 transition-colors {{ !$notif->est_lu ? 'bg-primary/5 hover:bg-primary/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50' }}">
+                                        <p class="text-sm text-slate-700 dark:text-slate-300">{{ $notif->message }}</p>
+                                        <span class="text-[10px] text-slate-400 mt-1 block">{{ $notif->created_at->diffForHumans() }}</span>
+                                    </div>
+                                @empty
+                                    <div class="p-6 text-center text-slate-500">
+                                        <span class="material-symbols-outlined text-4xl mb-2 opacity-20">notifications_paused</span>
+                                        <p class="text-sm">Aucune notification.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                            
+                            <div class="p-3 text-center border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+                                <span class="text-[10px] text-slate-400">Dernières notifications</span>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Profile Photo -->
                     <img

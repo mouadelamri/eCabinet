@@ -7,6 +7,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RendezVousController;
 use App\Http\Controllers\SecretaireController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,7 +16,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
 
-    $user = auth()->user();
+    $user = User::findOrFail(Auth::id());
     if ($user->role === 'ADMIN') return redirect()->route('admin.dashboard');
     if ($user->role === 'DOCTOR') return redirect()->route('doctor.dashboard');
     if ($user->role === 'SECRETARY') return redirect()->route('secretary.dashboard');
@@ -59,11 +61,10 @@ Route::middleware(['auth'])->prefix('patient')->name('patient.')->group(function
     Route::get('/ordonnance/{id}/download', [PatientController::class, 'downloadOrdonnance'])->name('ordonnance.download');
 });
 //secretary portal routes
-//secretary portal routes
 Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(function () {
     Route::get('/dashboard' , [SecretaireController::class , 'dashboard'])->name('dashboard');
     Route::get('/parametres' , [SecretaireController::class , 'settigns'])->name('parametres');
-    Route::patch('/parametres', [SecretaireController::class, 'updateSettings'])->name('parametres.update'); 
+    Route::patch('/parametres', [SecretaireController::class, 'updateSettings'])->name('parametres.update');
     Route::get('/patients' , [SecretaireController::class , 'patients'])->name('patients');
     Route::get('/PendingrendezVous' , [SecretaireController::class , 'PendingrendezVous'])->name('PendingrendezVous');
     Route::get('/ConfirmedrendezVous' , [SecretaireController::class , 'ConfirmedrendezVous'])->name('ConfirmedrendezVous');
@@ -71,7 +72,10 @@ Route::middleware(['auth'])->prefix('secretary')->name('secretary.')->group(func
     Route::patch('/rendezvous/{rv}/confirm', [RendezVousController::class, 'confirmAppointment'])->name('confirm');
     Route::patch('/rendezvous/{id}/cancel', [RendezVousController::class, 'annuler'])->name('cancel');
     Route::delete('/rendezvous/{id}', [RendezVousController::class, 'destroy'])->name('destroy');
+
+
 });
+
 
 // Doctor Portal Routes
 use App\Http\Controllers\DoctorController;

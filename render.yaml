@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ecabinet-app
+    runtime: docker
+    plan: free
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ecabinet-db
+          property: connectionString
+      - key: APP_KEY
+        sync: false
+
+databases:
+  - name: ecabinet-db
+    plan: free
+    databaseName: ecabinet
+    user: ecabinet_user

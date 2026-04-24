@@ -6,6 +6,7 @@ use App\Http\Requests\RendezVousRequest;
 use App\Mail\AppointmentConfirmed;
 use App\Models\Notification;
 use App\Models\RendezVous;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ class RendezVousController extends Controller
                     Mail::to($rdv->patient->email)->send(new AppointmentConfirmed($rdv));
                 }
             } catch (\Exception $e) {
-                \Log::error("Failed to notify patient of confirmation: " . $e->getMessage());
+                Log::error("Failed to send appointment request email: " . $e->getMessage());
             }
 
             return back()->with('success', 'Rendez-vous confirmé avec succès.');
@@ -85,7 +86,7 @@ class RendezVousController extends Controller
                     'sent_at' => now(),
                 ]);
                 } catch (\Exception $e) {
-                \Log::error("Failed to notify patient of annulation: " . $e->getMessage());
+                Log::error("Failed to notify patient of annulation: " . $e->getMessage());
             }
         return back()->with('success' , 'rendez vous annuler');
         }

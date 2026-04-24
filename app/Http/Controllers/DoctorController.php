@@ -141,7 +141,7 @@ class DoctorController extends Controller
 
     public function updateProfile(Request $request)
 {
-    $user = Auth::user();
+    $user = User::findOrFail(Auth::id());
 
     $request->validate([
         'name' => 'required|string|max:255',
@@ -183,7 +183,7 @@ class DoctorController extends Controller
         $image_base64 = base64_decode($image_parts[1]);
         $filename = 'signatures/' . uniqid() . '.png';
         Storage::disk('public')->put($filename, $image_base64);
-        
+
         $data['signature_path'] = $filename;
     } elseif ($request->hasFile('signature')) {
         if ($user->signature_path) {
@@ -193,7 +193,7 @@ class DoctorController extends Controller
         $data['signature_path'] =
             $request->file('signature')->store('signatures', 'public');
     }
-
+    if (!$user) abort(401);
     $user->update($data);
 
     return back()->with('success', 'Profil mis à jour avec succès.');
@@ -207,8 +207,7 @@ class DoctorController extends Controller
 
     public function updateSettings(Request $request)
     {
-        $user = Auth::user();
-
+        $user = User::findOrFail(Auth::id());
         $request->validate([
             'appearance_mode' => 'required|in:light,dark',
         ]);

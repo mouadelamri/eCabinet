@@ -14,6 +14,7 @@ use App\Models\AlertProtocol;
 use App\Models\ClinicLicense;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -105,7 +106,7 @@ class AdminController extends Controller
     public function deleteUser(User $user)
     {
         // Prevent deleting ADMIN users or deleting oneself
-        if ($user->role === 'ADMIN' || $user->id === auth()->id()) {
+        if ($user->role === 'ADMIN' || $user->id === Auth::id()) {
             return back()->with('error', 'Action non autorisée : les administrateurs ne peuvent pas être supprimés via cette interface.');
         }
         $test = RendezVous::where('patient_id', $user->id)->orWhere('medecin_id', $user->id)->exists();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreatePatientRequest;
 use App\Http\Requests\RendezVousRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use App\Models\Patient;
 use App\Models\RendezVous;
 use App\Models\Consultation;
@@ -138,7 +139,7 @@ class PatientController extends Controller
             Mail::to(Auth::user()->email)->queue(new AppointmentRequested($appointment));
         } catch (\Exception $e) {
             // Silently fail or log for now to not block the user
-            \Log::error("Failed to send appointment request email: " . $e->getMessage());
+            Log::error("Failed to send appointment request email: " . $e->getMessage());
         }
 
         return redirect()->route('patient.appointments')->with('success', 'Votre demande de rendez-vous a été envoyée avec succès !');
@@ -203,7 +204,7 @@ class PatientController extends Controller
      */
     public function updateSettings(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
         $request->validate([
             'name'          => ['required', 'string', 'max:255'],

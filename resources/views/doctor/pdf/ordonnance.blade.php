@@ -80,10 +80,12 @@
 
     <div class="header">
         <div class="doctor-info">
-            <h1>Dr. {{ auth()->user()->name ?? 'Médecin' }}</h1>
-            <strong>{{ auth()->user()->specialiste ?? 'Médecin Généraliste' }}</strong><br>
-            Tél : {{ auth()->user()->telephone_pro ?? 'Non renseigné' }}<br>
-            Email : {{ auth()->user()->email ?? '' }}
+               @php $doctor = $ordonnance->consultation->rendezVous->medecin; @endphp
+
+               <h1>Dr. {{ $doctor->name ?? 'Médecin' }}</h1>
+               <strong>{{ $doctor->specialiste ?? 'Médecin Généraliste' }}</strong><br>
+               Tél : {{ $doctor->telephone_pro ?? 'Non renseigné' }}<br>
+               Email : {{ $doctor->email ?? '' }}
         </div>
         <div class="clinic-info">
             <h2>eCabinet Médical</h2>
@@ -95,7 +97,7 @@
 
     <div class="patient-box">
         <strong>Patient(e) :</strong> {{ $ordonnance->consultation->rendezVous->patient->name ?? 'N/A' }} <br>
-        <strong>Âge :</strong> 
+        <strong>Âge :</strong>
         @if(isset($ordonnance->consultation->rendezVous->patient->date_naissance))
             {{ \Carbon\Carbon::parse($ordonnance->consultation->rendezVous->patient->date_naissance)->age }} ans
         @else
@@ -114,8 +116,8 @@
     <div class="signature-area">
         <strong>Signature & Cachet :</strong>
         <br>
-        @if(auth()->user()->signature_path)
-            <img src="{{ public_path('storage/'.auth()->user()->signature_path) }}" style="max-height: 80px; max-width: 200px; margin-top: 10px;">
+        @if($doctor->signature_path)
+            <img src="{{ public_path('storage/'.$doctor->signature_path) }}" style="max-height: 80px; max-width: 200px; margin-top: 10px;">
         @else
             <br><br><br>
             <hr style="border-top: 1px dashed #ccc;">

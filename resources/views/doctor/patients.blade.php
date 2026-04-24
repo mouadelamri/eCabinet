@@ -13,15 +13,6 @@
                 {{ $totalPatients }} patients actifs sous votre supervision
             </p>
         </div>
-        <div class="flex gap-3">
-            <button class="px-5 py-2.5 rounded-xl bg-surface-container-low dark:bg-slate-800 text-on-surface dark:text-slate-300 font-bold text-sm hover:bg-surface-container transition-all border border-slate-200 dark:border-slate-700">
-                Exporter Global (.CSV)
-            </button>
-            <button class="px-5 py-2.5 rounded-xl bg-primary text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-container transition-all">
-                <span class="material-symbols-outlined text-sm">person_add</span>
-                Nouvelle Fiche
-            </button>
-        </div>
     </div>
 
     <!-- Stats Section -->

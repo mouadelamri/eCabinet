@@ -77,7 +77,7 @@ class SecretaireController extends Controller
      */
     public function updateSettings(Request $request)
     {
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
         $request->validate([
             'name'          => ['required', 'string', 'max:255'],

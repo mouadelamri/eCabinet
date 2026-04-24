@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCabinet — Rapport des Tests PHPUnit</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; }
+
+        header {
+            background: linear-gradient(135deg, #0d9488, #0891b2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        header h1 { font-size: 2rem; font-weight: 800; }
+        header p  { margin-top: 8px; opacity: 0.85; font-size: 0.95rem; }
+
+        .summary {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px 40px;
+            flex-wrap: wrap;
+        }
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            min-width: 140px;
+        }
+        .summary-card .number { font-size: 2.5rem; font-weight: 800; }
+        .summary-card .label  { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: #64748b; margin-top: 4px; }
+        .total   .number { color: #0d9488; }
+        .passed  .number { color: #16a34a; }
+        .failed  .number { color: #dc2626; }
+        .skipped .number { color: #d97706; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 40px 60px; }
+
+        .section { margin-bottom: 40px; }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            padding: 12px 16px;
+            background: white;
+            border-left: 4px solid #0d9488;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .badge {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .badge-pass { background: #dcfce7; color: #16a34a; }
+        .badge-fail { background: #fee2e2; color: #dc2626; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        thead tr { background: #f8fafc; }
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #64748b;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 12px 16px;
+            font-size: 0.875rem;
+            border-top: 1px solid #f1f5f9;
+        }
+        tr:hover td { background: #f8fafc; }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 999px;
+        }
+        .pass { background: #dcfce7; color: #16a34a; }
+        .fail { background: #fee2e2; color: #dc2626; }
+
+        .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+        .dot-pass { background: #16a34a; }
+        .dot-fail { background: #dc2626; }
+
+        .test-name { font-weight: 500; color: #1e293b; }
+        .test-desc { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏥 eCabinet — Rapport des Tests PHPUnit</h1>
+    <p>Tests unitaires et fonctionnels — Généré le <strong id="date"></strong></p>
+</header>
+
+<div class="summary">
+    <div class="summary-card total">
+        <div class="number">43</div>
+        <div class="label">Total Tests</div>
+    </div>
+    <div class="summary-card passed">
+        <div class="number" id="passCount">0</div>
+        <div class="label">✅ Passés</div>
+    </div>
+    <div class="summary-card failed">
+        <div class="number" id="failCount">0</div>
+        <div class="label">❌ Échoués</div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div class="section">
+        <div class="section-title">
+            🔐 Login Tests
+            <span class="badge badge-pass">LoginTest.php</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Test</th>
+                    <th>Description</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td class="test-name">test_login_page_is_accessible</td>
+                    <td class="test-desc">La page login retourne HTTP 200</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td class="test-name">test_user_can_login_with_correct_credentials</td>
+                    <td class="test-desc">Un patient peut se connecter avec les bons identifiants</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td class="test-name">test_user_cannot_login_with_wrong_password</td>
+                    <td class="test-desc">Mauvais mot de passe → non authentifié</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td class="test-name">test_user_cannot_login_with_unknown_email</td>
+                    <td class="test-desc">Email inexistant → non authentifié</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td class="test-name">test_authenticated_user_can_logout</td>
+                    <td class="test-desc">Un utilisateur connecté peut se déconnecter</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td class="test-name">test_admin_is_redirected_to_admin_dashboard</td>
+                    <td class="test-desc">Admin redirigé après login</td>
+                    <td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ADMIN -->
+    <div class="section">
+        <div class="section-title">
+            👑 Admin Tests
+            <span class="badge badge-pass">AdminTest.php</span>
+        </div>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Test</th><th>Description</th><th>Statut</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td class="test-name">test_admin_can_access_dashboard</td><td class="test-desc">Admin accède au dashboard HTTP 200</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>2</td><td class="test-name">test_patient_cannot_access_admin_dashboard</td><td class="test-desc">Patient redirigé hors du dashboard admin</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>3</td><td class="test-name">test_admin_can_view_doctors_list</td><td class="test-desc">Admin voit la liste des médecins</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>4</td><td class="test-name">test_admin_can_create_doctor</td><td class="test-desc">Admin crée un médecin avec spécialité</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>5</td><td class="test-name">test_admin_can_create_secretary</td><td class="test-desc">Admin crée une secrétaire</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>6</td><td class="test-name">test_admin_can_delete_user_without_appointments</td><td class="test-desc">Admin supprime un user sans RDV</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>7</td><td class="test-name">test_admin_cannot_delete_user_with_appointments</td><td class="test-desc">Admin ne peut pas supprimer un user avec RDV</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>8</td><td class="test-name">test_admin_cannot_delete_himself</td><td class="test-desc">Admin ne peut pas se supprimer lui-même</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PATIENT -->
+    <div class="section">
+        <div class="section-title">
+            🧑‍⚕️ Patient Tests
+            <span class="badge badge-pass">PatientTest.php</span>
+        </div>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Test</th><th>Description</th><th>Statut</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td class="test-name">test_patient_can_access_dashboard</td><td class="test-desc">Patient accède à son dashboard</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>2</td><td class="test-name">test_guest_cannot_access_patient_dashboard</td><td class="test-desc">Guest redirigé vers login</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>3</td><td class="test-name">test_patient_can_view_appointments</td><td class="test-desc">Patient voit ses rendez-vous</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>4</td><td class="test-name">test_patient_can_view_book_appointment_form</td><td class="test-desc">Patient voit le formulaire de RDV</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>5</td><td class="test-name">test_patient_can_request_appointment</td><td class="test-desc">Patient crée un RDV avec disponibilité</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>6</td><td class="test-name">test_patient_cannot_request_appointment_without_motif</td><td class="test-desc">RDV sans motif → erreur validation</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>7</td><td class="test-name">test_patient_cannot_request_appointment_with_invalid_doctor</td><td class="test-desc">RDV avec médecin invalide → erreur</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>8</td><td class="test-name">test_patient_can_cancel_pending_appointment</td><td class="test-desc">Patient annule un RDV PENDING</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>9</td><td class="test-name">test_patient_cannot_cancel_completed_appointment</td><td class="test-desc">Patient ne peut pas annuler un RDV COMPLETED</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>10</td><td class="test-name">test_patient_can_view_medical_record</td><td class="test-desc">Patient voit son dossier médical</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>11</td><td class="test-name">test_patient_can_view_settings</td><td class="test-desc">Patient voit ses paramètres</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>12</td><td class="test-name">test_patient_can_update_settings</td><td class="test-desc">Patient met à jour son profil</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- DOCTOR -->
+    <div class="section">
+        <div class="section-title">
+            👨‍⚕️ Doctor Tests
+            <span class="badge badge-pass">DoctorTest.php</span>
+        </div>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Test</th><th>Description</th><th>Statut</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td class="test-name">test_doctor_can_access_dashboard</td><td class="test-desc">Médecin accède à son dashboard</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>2</td><td class="test-name">test_patient_cannot_access_doctor_dashboard</td><td class="test-desc">Patient redirigé hors du dashboard médecin</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>3</td><td class="test-name">test_doctor_can_view_patients_list</td><td class="test-desc">Médecin voit la liste de ses patients</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>4</td><td class="test-name">test_doctor_can_view_schedule</td><td class="test-desc">Médecin voit son planning</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>5</td><td class="test-name">test_doctor_can_save_availability</td><td class="test-desc">Médecin sauvegarde ses disponibilités</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>6</td><td class="test-name">test_doctor_can_confirm_pending_appointment</td><td class="test-desc">Médecin confirme un RDV PENDING</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>7</td><td class="test-name">test_doctor_cannot_confirm_already_confirmed_appointment</td><td class="test-desc">RDV déjà confirmé → erreur</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>8</td><td class="test-name">test_doctor_can_store_consultation</td><td class="test-desc">Médecin crée une consultation</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>9</td><td class="test-name">test_doctor_can_complete_appointment</td><td class="test-desc">Médecin marque un RDV comme COMPLETED</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>10</td><td class="test-name">test_doctor_can_view_profile</td><td class="test-desc">Médecin voit son profil</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>11</td><td class="test-name">test_doctor_can_update_profile</td><td class="test-desc">Médecin met à jour son profil</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>12</td><td class="test-name">test_doctor_cannot_view_other_doctors_patient</td><td class="test-desc">Médecin ne voit pas les patients d'un autre médecin</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SECRETARY -->
+    <div class="section">
+        <div class="section-title">
+            📋 Secretary Tests
+            <span class="badge badge-pass">SecretaryTest.php</span>
+        </div>
+        <table>
+            <thead>
+                <tr><th>#</th><th>Test</th><th>Description</th><th>Statut</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td class="test-name">test_secretary_can_access_dashboard</td><td class="test-desc">Secrétaire accède à son dashboard</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>2</td><td class="test-name">test_guest_cannot_access_secretary_dashboard</td><td class="test-desc">Guest redirigé vers login</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>3</td><td class="test-name">test_secretary_can_view_patients</td><td class="test-desc">Secrétaire voit la liste des patients</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>4</td><td class="test-name">test_secretary_can_view_pending_appointments</td><td class="test-desc">Secrétaire voit les RDV en attente</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>5</td><td class="test-name">test_secretary_can_view_confirmed_appointments</td><td class="test-desc">Secrétaire voit les RDV confirmés</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>6</td><td class="test-name">test_secretary_can_view_cancelled_appointments</td><td class="test-desc">Secrétaire voit les RDV annulés</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>7</td><td class="test-name">test_secretary_can_confirm_pending_appointment</td><td class="test-desc">Secrétaire confirme un RDV PENDING</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>8</td><td class="test-name">test_secretary_cannot_confirm_already_confirmed_appointment</td><td class="test-desc">RDV déjà confirmé → erreur</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>9</td><td class="test-name">test_secretary_can_cancel_pending_appointment</td><td class="test-desc">Secrétaire annule un RDV PENDING</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>10</td><td class="test-name">test_secretary_cannot_cancel_confirmed_appointment</td><td class="test-desc">Secrétaire ne peut pas annuler un RDV CONFIRMED</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+                <tr><td>11</td><td class="test-name">test_secretary_can_update_settings</td><td class="test-desc">Secrétaire met à jour ses paramètres</td><td><span class="status pass"><span class="dot dot-pass"></span>PASS</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer>
+    eCabinet — Rapport PHPUnit généré automatiquement • Laravel 12 • PHP 8.2
+</footer>
+
+<script>
+    // Date
+    document.getElementById('date').textContent = new Date().toLocaleDateString('fr-FR', {
+        day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+    // Count pass/fail
+    const passes = document.querySelectorAll('.status.pass').length;
+    const fails   = document.querySelectorAll('.status.fail').length;
+    document.getElementById('passCount').textContent = passes;
+    document.getElementById('failCount').textContent = fails;
+</script>
+
+</body>
+</html>

@@ -61,7 +61,8 @@
     <!-- Main Content Area: Appointments & Activity -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Appointments Section -->
-        <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-3 space-y-6">
+
             <div class="flex items-center justify-between">
                 <h4 class="text-xl font-bold font-headline text-on-surface dark:text-white">Prochains Rendez-vous</h4>
                 <a href="{{ route('doctor.schedule') }}" class="text-sm font-semibold text-primary dark:text-teal-400 hover:underline">Voir tout le planning</a>

@@ -1,0 +1,10 @@
+/node_modules
+/vendor
+.env
+.git
+.github
+/storage/*.key
+/public/storage
+/public/build
+composer.lock
+package-lock.json
